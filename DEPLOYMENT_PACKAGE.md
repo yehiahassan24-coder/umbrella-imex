@@ -262,7 +262,7 @@ Before you deploy, ensure:
 - [ ] Environment variables prepared
 
 ### Credentials
-- [ ] JWT_SECRET saved: `MD/GVMIeFClsL2CHKdAwDCHTNPlPyzR/zLJK+JL4w3c=`
+- [ ] JWT_SECRET generated: Run `./scripts/rotate-jwt-secret.sh`
 - [ ] Admin email decided
 - [ ] Admin password chosen (strong!)
 - [ ] SMTP credentials (if using email)

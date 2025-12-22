@@ -58,7 +58,7 @@ node scripts/create-admin.js your-email@domain.com YourStrongPassword123!
 ```env
 NODE_ENV=production
 DATABASE_URL=postgresql://postgres:[PASSWORD]@db.xxx.supabase.co:5432/postgres
-JWT_SECRET=MD/GVMIeFClsL2CHKdAwDCHTNPlPyzR/zLJK+JL4w3c=
+JWT_SECRET=<run: ./scripts/rotate-jwt-secret.sh to generate>
 ```
 
 #### ✅ Optional but Recommended (Email)

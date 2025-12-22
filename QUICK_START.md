@@ -78,7 +78,7 @@ DATABASE_URL
 postgresql://postgres:[PASSWORD]@db.xxx.supabase.co:5432/postgres
 
 JWT_SECRET
-MD/GVMIeFClsL2CHKdAwDCHTNPlPyzR/zLJK+JL4w3c=
+<run: ./scripts/rotate-jwt-secret.sh to generate>
 
 NODE_ENV
 production
@@ -343,7 +343,7 @@ Your deployment is successful when:
 - Admin Email: `admin@umbrella.com`
 - Admin Password: `[Your password]`
 - Database URL: `postgresql://...`
-- JWT Secret: `MD/GVMIeFClsL2CHKdAwDCHTNPlPyzR/zLJK+JL4w3c=`
+- JWT Secret: `[Generate with: ./scripts/rotate-jwt-secret.sh]`
 
 ---
 
