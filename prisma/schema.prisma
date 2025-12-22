@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  QUOTED
+  WON
+  LOST
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(ADMIN)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  logs      AuditLog[]
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String?
+  details   String?
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name_en     String
+  name_fr     String
+  desc_en     String
+  desc_fr     String
+  category    String
+  origin      String
+  season      String
+  price       Float
+  moq         Int
+  quantity    Int
+  is_active   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  
+  inquiries   Inquiry[]
+}
+
+model Inquiry {
+  id        String        @id @default(uuid())
+  productId String?
+  product   Product?      @relation(fields: [productId], references: [id])
+  name      String
+  email     String
+  phone     String
+  message   String
+  is_read   Boolean       @default(false)
+  status    InquiryStatus @default(NEW)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}

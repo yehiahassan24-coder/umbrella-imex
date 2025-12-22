@@ -1,0 +1,77 @@
+.navbar {
+    height: 80px;
+    background-color: var(--color-soft-white);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-forest-green);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.menu a {
+    color: var(--color-charcoal-gray);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.menu a:hover {
+    color: var(--color-gold);
+}
+
+.langBtn {
+    background: transparent;
+    border: 1px solid var(--color-forest-green);
+    color: var(--color-forest-green);
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.langBtn:hover {
+    background: var(--color-forest-green);
+    color: white;
+}
+
+.mobileToggle {
+    display: none;
+    cursor: pointer;
+    color: var(--color-forest-green);
+}
+
+.mobileMenu {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    padding: 2rem;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.05);
+    gap: 1.5rem;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .menu {
+        display: none;
+    }
+
+    .mobileToggle {
+        display: block;
+    }
+}
