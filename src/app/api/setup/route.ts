@@ -3,9 +3,15 @@ import { prisma } from '@/lib/prisma';
 import { hashPassword } from '@/lib/password';
 
 export async function GET() {
-    // 🔒 PRODUCTION SAFETY: Disable this endpoint in production
+    // 🔒 PRODUCTION SAFETY: Double-layer protection
+    // Layer 1: Environment check
     if (process.env.NODE_ENV === 'production') {
-        return NextResponse.json({ error: 'Setup endpoint is disabled in production' }, { status: 403 });
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Layer 2: Explicit enable flag (must be set to 'true' in development)
+    if (process.env.ENABLE_SETUP_ENDPOINT !== 'true') {
+        return NextResponse.json({ error: 'Setup endpoint is disabled' }, { status: 403 });
     }
 
     try {
