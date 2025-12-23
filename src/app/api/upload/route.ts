@@ -20,9 +20,9 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        // 2. Size Validation (5MB limit)
-        if (file.size > 5 * 1024 * 1024) {
-            return NextResponse.json({ error: 'File too large (Max 5MB)' }, { status: 413 });
+        // 2. Size Validation (3MB limit for Base64 safety)
+        if (file.size > 3 * 1024 * 1024) {
+            return NextResponse.json({ error: 'File too large (Max 3MB)' }, { status: 413 });
         }
 
         // 3. MIME Type Validation
@@ -38,8 +38,18 @@ export async function POST(request: Request) {
         const fileExtension = file.name.split('.').pop()?.toLowerCase() || 'bin';
         const uniqueName = `${crypto.randomUUID()}.${fileExtension}`;
 
-        // 5. Use Storage Abstraction
-        const fileUrl = await uploadFile(buffer, uniqueName, file.type);
+        // 5. check for cloud storage config
+        const hasCloudStorage = process.env.UPLOAD_STORAGE_TYPE === 's3' || process.env.BLOB_READ_WRITE_TOKEN;
+
+        let fileUrl: string;
+
+        if (hasCloudStorage) {
+            fileUrl = await uploadFile(buffer, uniqueName, file.type);
+        } else {
+            // Fallback: Return Base64 Data URI (Works in Vercel with no config)
+            const base64String = buffer.toString('base64');
+            fileUrl = `data:${file.type};base64,${base64String}`;
+        }
 
         return NextResponse.json({ url: fileUrl });
     } catch (error) {
