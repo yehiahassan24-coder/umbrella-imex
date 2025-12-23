@@ -27,6 +27,7 @@ export default function Navbar() {
     const menuItems = [
         { key: 'nav.home', href: '/' },
         { key: 'nav.products', href: '/products' },
+        { key: 'nav.solutions', href: '/solutions/retail-shelf-life' },
         { key: 'nav.about', href: '/about' },
         { key: 'nav.contact', href: '/contact' },
     ];

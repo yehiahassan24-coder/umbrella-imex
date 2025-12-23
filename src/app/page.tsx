@@ -6,28 +6,65 @@ import { Product } from '@/types';
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  // Fetch products server side
-  const products = await prisma.product.findMany({
-    take: 4,
-    where: { is_active: true },
-    orderBy: { createdAt: 'desc' }
-  });
+  let serializedProducts: Product[] = [];
 
-  // Serialize dates
-  const serializedProducts: Product[] = products.map((p: any) => ({
-    id: p.id,
-    name_en: p.name_en,
-    name_fr: p.name_fr,
-    desc_en: p.desc_en,
-    desc_fr: p.desc_fr,
-    category: p.category,
-    origin: p.origin,
-    price: Number(p.price),
-    season: p.season,
-    moq: Number(p.moq),
-    quantity: Number(p.quantity),
-    images: p.images || [],
-  }));
+  try {
+    // Fetch products server side
+    const products = await prisma.product.findMany({
+      take: 4,
+      where: { is_active: true },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    // Serialize dates
+    serializedProducts = products.map((p: any) => ({
+      id: p.id,
+      name_en: p.name_en,
+      name_fr: p.name_fr,
+      desc_en: p.desc_en,
+      desc_fr: p.desc_fr,
+      category: p.category,
+      origin: p.origin,
+      price: Number(p.price),
+      season: p.season,
+      moq: Number(p.moq),
+      quantity: Number(p.quantity),
+      images: p.images || [],
+    }));
+  } catch (error) {
+    console.error("Database fetch failed, using fallback data:", error);
+    // Fallback data for layout development
+    serializedProducts = [
+      {
+        id: "fb-1",
+        name_en: "Premium Egyptian Onions",
+        name_fr: "Oignons Égyptiens de Qualité",
+        desc_en: "High-quality golden onions.",
+        desc_fr: "Oignons dorés de haute qualité.",
+        category: "Vegetables",
+        origin: "Egypt",
+        price: 450,
+        season: "March - July",
+        moq: 10000,
+        quantity: 50000,
+        images: ["/images/placeholder.png"]
+      },
+      {
+        id: "fb-2",
+        name_en: "Sweet Egyptian Oranges",
+        name_fr: "Oranges Égyptiennes Sucrées",
+        desc_en: "Juicy Valencia oranges.",
+        desc_fr: "Oranges Valencia juteuses.",
+        category: "Fruits",
+        origin: "Egypt",
+        price: 600,
+        season: "December - June",
+        moq: 12000,
+        quantity: 80000,
+        images: ["/images/placeholder.png"]
+      }
+    ];
+  }
 
   const educationSchema = {
     "@context": "https://schema.org",

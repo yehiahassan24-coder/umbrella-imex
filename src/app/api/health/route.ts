@@ -3,23 +3,19 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET() {
     try {
-        // 1. Check Database Connection
+        // Simple database connectivity check
         await prisma.$queryRaw`SELECT 1`;
 
+        // ✅ Minimal public response - no version or infrastructure details
         return NextResponse.json({
-            status: 'HEALTHY',
-            timestamp: new Date().toISOString(),
-            version: '1.0.0',
-            services: {
-                database: 'CONNECTED',
-                storage: 'OPERATIONAL'
-            }
+            status: 'ok',
+            timestamp: new Date().toISOString()
         });
     } catch (error) {
+        // Generic error - no internal details
         return NextResponse.json({
-            status: 'UNHEALTHY',
-            timestamp: new Date().toISOString(),
-            error: 'Database connection failed'
+            status: 'error',
+            timestamp: new Date().toISOString()
         }, { status: 503 });
     }
 }

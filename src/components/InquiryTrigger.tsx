@@ -1,20 +1,26 @@
 "use client";
 import React, { useState } from 'react';
-import InquiryModal from '@/components/InquiryModal';
+import InquiryModal from './InquiryModal';
 
-interface InquiryModalWrapperProps {
+interface InquiryTriggerProps {
     btnText: string;
     className?: string;
     initialProduct?: string;
     style?: React.CSSProperties;
+    children?: React.ReactNode;
 }
 
-export default function InquiryModalWrapper({
+/**
+ * A client-side component that triggers the InquiryModal.
+ * Useful for including the modal in server components.
+ */
+export default function InquiryTrigger({
     btnText,
     className,
     initialProduct,
-    style
-}: InquiryModalWrapperProps) {
+    style,
+    children
+}: InquiryTriggerProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -24,7 +30,7 @@ export default function InquiryModalWrapper({
                 className={className}
                 style={style}
             >
-                {btnText}
+                {children || btnText}
             </button>
             <InquiryModal
                 isOpen={isOpen}

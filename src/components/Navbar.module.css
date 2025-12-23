@@ -99,15 +99,16 @@
     position: fixed;
     top: 0;
     right: -100%;
-    width: 300px;
+    width: 280px;
+    max-width: 85%;
     height: 100vh;
     background: white;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
     padding: 80px 2rem 2rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    transition: right 0.3s ease-in-out;
+    transition: right 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .mobileMenu.open {

@@ -9,7 +9,7 @@ import {
     CheckCircle, TrendingUp, ArrowDownRight,
     Search, LayoutGrid, Calendar
 } from 'lucide-react';
-import InquiryModalWrapper from './InquiryModalWrapper';
+import InquiryTrigger from '@/components/InquiryTrigger';
 
 export const metadata: Metadata = {
     title: 'Retail Shelf-Life Solutions | Umbrella Import & Export',
@@ -50,7 +50,7 @@ export default function RetailSolutionPage() {
                     <h1>Produce That Arrives Shelf-Ready — Every Time</h1>
                     <p>Optimized cold-chain logistics and export-grade handling designed for supermarkets and retail chains that demand maximum shelf life and premium appearance.</p>
                     <div className={styles.ctaGroup}>
-                        <InquiryModalWrapper
+                        <InquiryTrigger
                             btnText="Request Retail Quote"
                             className={styles.primaryBtn}
                             initialProduct="Retail Shelf Life Solutions"
@@ -166,9 +166,9 @@ export default function RetailSolutionPage() {
             <section className={`${styles.section} ${styles.graySection}`}>
                 <div className={styles.container}>
                     <div className={styles.complianceFlex}>
-                        <div style={{ flex: 1 }}>
-                            <h2 style={{ fontSize: '2.5rem', marginBottom: '1.5rem' }}>Trusted by Retailers Worldwide</h2>
-                            <p style={{ marginBottom: '2rem' }}>We operate with full transparency and world-class documentation to ensure seamless customs clearance and retail compliance in EU, GCC, and Asian markets.</p>
+                        <div className={styles.complianceText}>
+                            <h2>Trusted by Retailers Worldwide</h2>
+                            <p>We operate with full transparency and world-class documentation to ensure seamless customs clearance and retail compliance in EU, GCC, and Asian markets.</p>
                             <div className={styles.complianceBadges}>
                                 <div className={styles.badgeCard}>
                                     <ShieldCheck color="#28a745" /> <strong>ISO 9001:2015</strong>
@@ -184,15 +184,15 @@ export default function RetailSolutionPage() {
                                 </div>
                             </div>
                         </div>
-                        <div style={{ flex: 0.8, background: 'white', padding: '3rem', borderRadius: '24px', position: 'relative' }}>
+                        <div className={styles.complianceImageContainer}>
                             <Image
                                 src="/images/supermarket_fresh_shelf_hero.png"
                                 alt="Inspection"
                                 width={500}
                                 height={300}
-                                style={{ borderRadius: '12px', objectFit: 'cover', width: '100%' }}
+                                className={styles.complianceImage}
                             />
-                            <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', background: '#28a745', color: 'white', padding: '1rem', borderRadius: '8px', fontWeight: 600 }}>
+                            <div className={styles.auditBadge}>
                                 100% Audit Pass Rate
                             </div>
                         </div>
@@ -213,7 +213,11 @@ export default function RetailSolutionPage() {
                                 <h3>National Supermarkets</h3>
                                 <p>High volume, strict QC, and consistent weekly supply schedules to power massive distribution hubs.</p>
                             </div>
-                            <button className={styles.useCaseBtn}>Discuss Retail Program</button>
+                            <InquiryTrigger
+                                btnText="Discuss Retail Program"
+                                className={styles.useCaseBtn}
+                                initialProduct="Retail Solution - National Supermarkets"
+                            />
                         </div>
                         <div className={styles.useCaseCard}>
                             <div className={styles.useCaseContent}>
@@ -221,7 +225,11 @@ export default function RetailSolutionPage() {
                                 <h3>Private Label Retail</h3>
                                 <p>Custom packaging, branding, and specialized labeling options for your store&apos;s own premium line.</p>
                             </div>
-                            <button className={styles.useCaseBtn}>Discuss Retail Program</button>
+                            <InquiryTrigger
+                                btnText="Discuss Retail Program"
+                                className={styles.useCaseBtn}
+                                initialProduct="Retail Solution - Private Label"
+                            />
                         </div>
                         <div className={styles.useCaseCard}>
                             <div className={styles.useCaseContent}>
@@ -229,7 +237,11 @@ export default function RetailSolutionPage() {
                                 <h3>Premium Grocery Chains</h3>
                                 <p>Appearance-first grading and maximum shelf-life for high-end boutiques and specialty retailers.</p>
                             </div>
-                            <button className={styles.useCaseBtn}>Discuss Retail Program</button>
+                            <InquiryTrigger
+                                btnText="Discuss Retail Program"
+                                className={styles.useCaseBtn}
+                                initialProduct="Retail Solution - Premium Grocery"
+                            />
                         </div>
                     </div>
                 </div>
@@ -266,8 +278,8 @@ export default function RetailSolutionPage() {
                         <div className={styles.quote}>
                             “Umbrella’s cold-chain process reduced our in-store spoilage by over 15%. The produce arrives shelf-ready and visually consistent, allowing us to maintain premium pricing throughout the week.”
                         </div>
-                        <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>— Procurement Director</div>
-                        <div style={{ color: '#64748b' }}>European Retail Chain</div>
+                        <div className={styles.testimonialAuthor}>— Procurement Director</div>
+                        <div className={styles.testimonialRole}>European Retail Chain</div>
                     </div>
                 </div>
             </section>
@@ -277,12 +289,12 @@ export default function RetailSolutionPage() {
                 <div className={styles.container}>
                     <h2>Ready to Deliver Fresher Produce to Your Shelves?</h2>
                     <div className={styles.ctaGroup}>
-                        <InquiryModalWrapper
+                        <InquiryTrigger
                             btnText="Request Retail Quote"
                             className={styles.primaryBtn}
                             initialProduct="Retail Shelf Life Solutions"
                         />
-                        <button className={styles.secondaryBtn} style={{ background: 'white', color: '#1e5b3a' }}>
+                        <button className={`${styles.secondaryBtn} ${styles.secondaryCTA}`}>
                             Schedule Retail Consultation
                         </button>
                     </div>

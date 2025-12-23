@@ -2,6 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Building2, Store, ShoppingBag } from 'lucide-react';
+import Link from 'next/link';
 import styles from './BuyerSegments.module.css';
 
 interface BuyerSegmentsProps {
@@ -66,13 +67,12 @@ export default function BuyerSegments({ onQuoteRequest }: BuyerSegmentsProps) {
                                 <h3 className={styles.title}>{segment.title}</h3>
                                 <p className={styles.painPoint}>{segment.pain} <strong>{segment.solution}</strong></p>
                                 {segment.id === 'retail' ? (
-                                    <a
+                                    <Link
                                         href="/solutions/retail-shelf-life"
                                         className={styles.actionBtn}
-                                        style={{ textAlign: 'center', display: 'block' }}
                                     >
                                         {segment.action}
-                                    </a>
+                                    </Link>
                                 ) : (
                                     <button
                                         className={styles.actionBtn}

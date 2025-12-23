@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { headers } from 'next/headers';
 import { rateLimit } from '@/lib/ratelimit';
 import { uploadFile } from '@/lib/storage';
+import { validateImageMagicBytes } from '@/lib/sanitize';
 
 export async function POST(request: Request) {
     try {
@@ -25,14 +26,24 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'File too large (Max 1MB). For larger images, use an external URL.' }, { status: 413 });
         }
 
-        // 3. MIME Type Validation
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
-        if (!allowedTypes.includes(file.type)) {
-            return NextResponse.json({ error: 'Invalid file type. Only JPG, PNG, WEBP, and SVG are allowed.' }, { status: 400 });
-        }
-
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
+
+        // 3. MAGIC BYTE VALIDATION (prevents MIME type spoofing)
+        const magicByteCheck = validateImageMagicBytes(buffer);
+        if (!magicByteCheck.valid) {
+            return NextResponse.json({
+                error: 'Invalid file type. File content does not match allowed image formats.'
+            }, { status: 400 });
+        }
+
+        // 4. MIME Type Validation (secondary check)
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        if (!allowedTypes.includes(file.type) || file.type !== magicByteCheck.mimeType) {
+            return NextResponse.json({
+                error: 'Invalid file type. Only JPG, PNG, WEBP, and GIF are allowed.'
+            }, { status: 400 });
+        }
 
         // 4. Secure Filename Generation
         const fileExtension = file.name.split('.').pop()?.toLowerCase() || 'bin';

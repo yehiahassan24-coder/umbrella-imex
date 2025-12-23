@@ -29,6 +29,7 @@ export const translations = {
             quality: "Quality Control",
             shipping: "Shipping & Logistics",
             contact: "Contact",
+            solutions: "Retail Solutions",
         },
         about: {
             title: "About Us",
@@ -111,6 +112,7 @@ export const translations = {
             quality: "Contrôle Qualité",
             shipping: "Logistique",
             contact: "Contact",
+            solutions: "Solutions Retail",
         },
         about: {
             title: "À propos de nous",

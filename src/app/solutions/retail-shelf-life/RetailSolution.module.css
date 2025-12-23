@@ -52,6 +52,12 @@
     letter-spacing: -0.02em;
 }
 
+@media (max-width: 480px) {
+    .heroContent h1 {
+        font-size: 2.2rem;
+    }
+}
+
 .heroContent p {
     font-size: clamp(1.1rem, 2vw, 1.4rem);
     opacity: 0.95;
@@ -153,6 +159,16 @@
 .sectionHeader p {
     font-size: 1.1rem;
     color: #64748b;
+}
+
+@media (max-width: 768px) {
+    .sectionHeader {
+        margin-bottom: 3rem;
+    }
+
+    .sectionHeader h2 {
+        font-size: 1.8rem;
+    }
 }
 
 /* Problem Section */
@@ -277,7 +293,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 8px;
+}
+
+@media (max-width: 768px) {
+    .stepCircle {
+        width: 60px;
+        height: 60px;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
 }
 
 /* Compliance Section */
@@ -288,8 +313,21 @@
     flex-wrap: wrap;
 }
 
-.complianceBadges {
+.complianceText {
     flex: 1;
+    min-width: 300px;
+}
+
+.complianceText h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.complianceText p {
+    margin-bottom: 2rem;
+}
+
+.complianceBadges {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
@@ -303,6 +341,33 @@
     background: white;
     border-radius: 12px;
     border: 1px solid #edf2f7;
+}
+
+.complianceImageContainer {
+    flex: 0.8;
+    background: white;
+    padding: 3rem;
+    border-radius: 24px;
+    position: relative;
+    min-width: 300px;
+}
+
+.complianceImage {
+    border-radius: 12px;
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+}
+
+.auditBadge {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: #28a745;
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 600;
 }
 
 /* Use Cases */
@@ -390,6 +455,15 @@
     font-style: italic;
 }
 
+.testimonialAuthor {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.testimonialRole {
+    color: #64748b;
+}
+
 /* Final CTA */
 .finalCTA {
     background: linear-gradient(135deg, #1e5b3a 0%, #111827 100%);
@@ -402,6 +476,11 @@
     font-size: 3rem;
     margin-bottom: 3rem;
     color: white;
+}
+
+.secondaryCTA {
+    background: white !important;
+    color: #1e5b3a !important;
 }
 
 /* Animations */
@@ -419,6 +498,14 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+    .section {
+        padding: 4rem 0;
+    }
+
+    .sectionHeader {
+        margin-bottom: 3rem;
+    }
+
     .processTimeline {
         flex-direction: column;
         gap: 3rem;
@@ -436,5 +523,25 @@
     .hero {
         height: auto;
         padding: 120px 0 80px;
+    }
+
+    .complianceFlex {
+        gap: 2rem;
+    }
+
+    .complianceImageContainer {
+        padding: 1.5rem;
+    }
+
+    .testimonialBox {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .quote {
+        font-size: 1.25rem;
+    }
+
+    .complianceBadges {
+        grid-template-columns: 1fr;
     }
 }

@@ -39,10 +39,16 @@
 /* On mobile where the fixed bars are higher */
 @media (max-width: 900px) {
     .scrollButton {
-        bottom: 120px;
-        /* Higher than the 80-100px bar */
-        right: 20px;
-        width: 45px;
-        height: 45px;
+        bottom: 110px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+        background: var(--color-dark-green, #1e5b3a);
+        color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .scrollButton:active {
+        transform: scale(0.9);
     }
 }

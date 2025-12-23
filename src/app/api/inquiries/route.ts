@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { sendAdminNotification, sendCustomerAutoReply } from '@/lib/mail';
 import { rateLimit } from '@/lib/ratelimit';
 import { headers } from 'next/headers';
+import { sanitizeInput, isValidEmail } from '@/lib/sanitize';
 
 export async function POST(request: Request) {
     try {
@@ -33,11 +34,16 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Input too long' }, { status: 400 });
         }
 
-        // Email format check
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(body.email)) {
+        // Email format check with utility
+        if (!isValidEmail(body.email)) {
             return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
         }
+
+        // ✅ SANITIZE ALL USER INPUTS to prevent XSS
+        const sanitizedName = sanitizeInput(body.name);
+        const sanitizedEmail = sanitizeInput(body.email);
+        const sanitizedPhone = sanitizeInput(body.phone || '');
+        const sanitizedMessage = sanitizeInput(body.message);
 
         // Fetch product name if productId is provided for the email
         let productName = undefined;
@@ -51,10 +57,10 @@ export async function POST(request: Request) {
 
         const inquiry = await prisma.inquiry.create({
             data: {
-                name: body.name,
-                email: body.email,
-                phone: body.phone || '',
-                message: body.message,
+                name: sanitizedName,
+                email: sanitizedEmail,
+                phone: sanitizedPhone,
+                message: sanitizedMessage,
                 productId: body.productId || null,
                 status: 'NEW' as any
             },

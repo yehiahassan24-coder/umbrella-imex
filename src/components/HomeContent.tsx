@@ -44,14 +44,13 @@ export default function HomeContent({ products }: { products: Product[] }) {
                 <div className={styles.heroContent}>
                     <h1>{t('home.heroTitle') || "Premium Egyptian Produce for Global Markets"}</h1>
                     <p>{t('home.heroSubtitle') || "Connecting growers to global buyers with certified quality and reliable logistics."}</p>
-                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2.5rem', flexWrap: 'wrap' }}>
-                        <Link href="/products" className="btn btn-primary" style={{ minWidth: '180px', padding: '1rem 2rem' }}>
+                    <div className={styles.heroCTA}>
+                        <Link href="/products" className={`btn btn-primary ${styles.heroBtn}`}>
                             Explore Products
                         </Link>
                         <button
                             onClick={() => openModal()}
-                            className="btn btn-secondary"
-                            style={{ borderColor: 'white', color: 'white', minWidth: '180px', padding: '1rem 2rem' }}
+                            className={`btn btn-secondary ${styles.heroBtn} ${styles.heroBtnSecondary}`}
                         >
                             Request Custom Quote
                         </button>
@@ -70,8 +69,8 @@ export default function HomeContent({ products }: { products: Product[] }) {
                 <div className="container">
                     <h2 className={styles.sectionTitle}>{t('home.featuredProducts') || "Seasonal Highlights"}</h2>
                     <ProductCarousel products={products} onQuoteRequest={openModal} />
-                    <div className="text-center" style={{ marginTop: '2rem' }}>
-                        <Link href="/products" style={{ textDecoration: 'underline', color: '#1E5B3A', fontWeight: 600 }}>
+                    <div className={styles.featuredProductsLink}>
+                        <Link href="/products" className={styles.catalogLink}>
                             View Entire Catalog &rarr;
                         </Link>
                     </div>
@@ -97,23 +96,12 @@ export default function HomeContent({ products }: { products: Product[] }) {
             <Benefits />
 
             {/* 11. Secondary CTA "Safety Net" - NEW */}
-            <section style={{ padding: '3rem 0', background: 'white', textAlign: 'center', borderTop: '1px solid #edf2f7' }}>
+            <section className={styles.consultSection}>
                 <div className="container">
-                    <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#2d3748' }}>Not ready for a full quote?</h3>
+                    <h3 className={styles.consultTitle}>Not ready for a full quote?</h3>
                     <button
                         onClick={() => openModal('General Consultation')}
-                        style={{
-                            background: 'transparent',
-                            border: '2px solid #28a745',
-                            color: '#28a745',
-                            padding: '12px 24px',
-                            borderRadius: '50px',
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                        }}
-                        onMouseOver={(e) => { e.currentTarget.style.background = '#f0fff4' }}
-                        onMouseOut={(e) => { e.currentTarget.style.background = 'transparent' }}
+                        className={styles.consultBtn}
                     >
                         Talk to an Export Specialist
                     </button>
@@ -130,11 +118,10 @@ export default function HomeContent({ products }: { products: Product[] }) {
             <section className={styles.ctaBanner}>
                 <div className="container">
                     <h2>Ready to elevate your supply chain?</h2>
-                    <p style={{ fontSize: '1.2rem', opacity: 0.9, marginBottom: '2.5rem' }}> Partner with Umbrella Import for reliability you can taste.</p>
+                    <p className={styles.ctaBannerSub}> Partner with Umbrella Import for reliability you can taste.</p>
                     <button
                         onClick={() => openModal()}
-                        className="btn btn-primary"
-                        style={{ backgroundColor: 'white', color: '#1E5B3A', padding: '16px 40px', fontSize: '1.1rem', border: 'none' }}
+                        className={`btn btn-primary ${styles.ctaBannerBtn}`}
                     >
                         Start Your Inquiry
                     </button>

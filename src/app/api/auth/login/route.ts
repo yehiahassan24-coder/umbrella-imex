@@ -91,7 +91,11 @@ export async function POST(request: Request) {
 
         const response = NextResponse.json({
             success: true,
-            csrfToken: csrfToken // Send to client to store in memory/localStorage for headers
+            user: {
+                email: user.email,
+                role: user.role
+            }
+            // ✅ CSRF token NOT sent in body - only in httpOnly cookie
         });
 
         // Admin Token (HTTP-Only)
