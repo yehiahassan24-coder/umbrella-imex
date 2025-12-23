@@ -555,7 +555,7 @@
         gap: 0 !important;
         padding: 0 1rem !important;
         width: 100% !important;
-        margin-bottom: 120px !important;
+        margin-bottom: 140px !important;
         /* Space at bottom for fixed bar */
     }
 
@@ -582,6 +582,7 @@
         width: 100% !important;
         display: block !important;
         z-index: 5 !important;
+        padding-bottom: 2rem !important;
     }
 
     .title {
@@ -590,21 +591,26 @@
         margin: 1rem 0 !important;
         color: #1e293b !important;
         font-weight: 800 !important;
+        display: block !important;
     }
 
+    /* THE FIXED BOTTOM BAR - CORRECTED TOP RECOVERY */
     .commercialCard {
         position: fixed !important;
         bottom: 0 !important;
+        top: auto !important;
+        /* OVERRIDE DESKTOP TOP:20px */
         left: 0 !important;
         right: 0 !important;
+        height: auto !important;
         width: 100% !important;
         margin: 0 !important;
         padding: 1rem 1.25rem calc(1rem + env(safe-area-inset-bottom, 0px)) 1.25rem !important;
         background: white !important;
         border-top: 1px solid #e2e8f0 !important;
         border-radius: 20px 20px 0 0 !important;
-        box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.1) !important;
-        z-index: 9999 !important;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1) !important;
+        z-index: 10001 !important;
         display: flex !important;
         flex-direction: column !important;
     }
