@@ -529,32 +529,72 @@
     font-size: 0.85rem;
 }
 
-/* Mobile */
+/* Mobile PDP Fixes */
 @media (max-width: 900px) {
+    .container {
+        padding: 1rem 0 120px 0;
+        /* Huge bottom padding for the fixed bar */
+    }
+
+    .topNav {
+        margin-bottom: 1.5rem;
+    }
+
     .grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
+        display: block;
+        /* Switch from grid to block for simplicity on mobile */
+        padding: 0 1rem;
     }
 
     .imageGallery {
         position: static;
+        margin-bottom: 2rem;
     }
 
+    .mainImageWrapper {
+        border-radius: 12px;
+        aspect-ratio: 1/1;
+        /* Square images often better on mobile */
+    }
+
+    .thumbnailList {
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+
+    .productInfo {
+        display: block;
+        width: 100%;
+    }
+
+    .title {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    /* THE FIXED BOTTOM BAR */
     .commercialCard {
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
         margin: 0;
-        border-radius: 16px 16px 0 0;
-        padding: 1rem;
+        border-radius: 20px 20px 0 0;
+        /* Rounded top corners */
+        padding: 1.25rem;
+        background: white;
         border-top: 1px solid #e2e8f0;
-        box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.08);
+        z-index: 999;
+        /* Ensure it's on top of everything */
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        gap: 1rem;
     }
 
+    /* Hide price in the fixed bar to keep it compact, or show it? */
+    /* Let's show it on mobile too but side-by-side with buttons? */
+    /* For now, keep it simple as user saw: just buttons */
     .priceSection,
     .responseTime {
         display: none;
@@ -562,21 +602,31 @@
 
     .actionButtons {
         display: flex;
-        gap: 1rem;
+        flex-direction: row;
+        /* Buttons side by side */
+        gap: 0.75rem;
         width: 100%;
         margin: 0;
+    }
+
+    .actionButtons .btn {
+        flex: 1;
+        padding: 12px 10px;
+        font-size: 0.9rem;
+    }
+
+    .specsGrid {
+        grid-template-columns: 1fr;
+        /* Single column specs */
+        gap: 1.25rem;
     }
 
     .reviewGrid {
         grid-template-columns: 1fr;
     }
 
-    .title {
-        font-size: 2rem;
-    }
-
-    /* Spacer at bottom because of sticky card */
-    .container {
-        padding-bottom: 100px;
+    .reviewsSection {
+        padding: 1.5rem;
+        margin-top: 2rem;
     }
 }
