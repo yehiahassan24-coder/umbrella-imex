@@ -529,104 +529,119 @@
     font-size: 0.85rem;
 }
 
-/* Mobile PDP Fixes */
+/* Mobile PDP Final Robust Fix */
 @media (max-width: 900px) {
     .container {
-        padding: 1rem 0 120px 0;
-        /* Huge bottom padding for the fixed bar */
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        display: block !important;
+        background: white !important;
     }
 
     .topNav {
-        margin-bottom: 1.5rem;
+        margin-top: 5rem !important;
+        /* Safety gap for fixed navbar */
+        margin-bottom: 1rem !important;
+        padding: 0 1rem !important;
+        display: flex !important;
     }
 
     .grid {
-        display: block;
-        /* Switch from grid to block for simplicity on mobile */
-        padding: 0 1rem;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0 !important;
+        padding: 0 1rem !important;
+        width: 100% !important;
+        margin-bottom: 120px !important;
+        /* Space at bottom for fixed bar */
     }
 
     .imageGallery {
-        position: static;
-        margin-bottom: 2rem;
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        margin-top: 0 !important;
+        margin-bottom: 1.5rem !important;
+        z-index: 10 !important;
     }
 
     .mainImageWrapper {
-        border-radius: 12px;
-        aspect-ratio: 1/1;
-        /* Square images often better on mobile */
-    }
-
-    .thumbnailList {
-        overflow-x: auto;
-        padding-bottom: 10px;
+        aspect-ratio: 1/1 !important;
+        width: 100% !important;
+        height: auto !important;
+        border-radius: 12px !important;
+        position: relative !important;
     }
 
     .productInfo {
-        display: block;
-        width: 100%;
+        position: relative !important;
+        width: 100% !important;
+        display: block !important;
+        z-index: 5 !important;
     }
 
     .title {
-        font-size: 1.8rem;
-        margin-bottom: 1rem;
+        font-size: 1.75rem !important;
+        line-height: 1.25 !important;
+        margin: 1rem 0 !important;
+        color: #1e293b !important;
+        font-weight: 800 !important;
     }
 
-    /* THE FIXED BOTTOM BAR */
     .commercialCard {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: 0;
-        border-radius: 20px 20px 0 0;
-        /* Rounded top corners */
-        padding: 1.25rem;
-        background: white;
-        border-top: 1px solid #e2e8f0;
-        box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.08);
-        z-index: 999;
-        /* Ensure it's on top of everything */
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 1rem 1.25rem calc(1rem + env(safe-area-inset-bottom, 0px)) 1.25rem !important;
+        background: white !important;
+        border-top: 1px solid #e2e8f0 !important;
+        border-radius: 20px 20px 0 0 !important;
+        box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.1) !important;
+        z-index: 9999 !important;
+        display: flex !important;
+        flex-direction: column !important;
     }
 
-    /* Hide price in the fixed bar to keep it compact, or show it? */
-    /* Let's show it on mobile too but side-by-side with buttons? */
-    /* For now, keep it simple as user saw: just buttons */
     .priceSection,
     .responseTime {
-        display: none;
+        display: none !important;
     }
 
     .actionButtons {
-        display: flex;
-        flex-direction: row;
-        /* Buttons side by side */
-        gap: 0.75rem;
-        width: 100%;
-        margin: 0;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 0.75rem !important;
+        width: 100% !important;
     }
 
     .actionButtons .btn {
-        flex: 1;
-        padding: 12px 10px;
-        font-size: 0.9rem;
+        flex: 1 !important;
+        padding: 14px 10px !important;
+        font-size: 0.9rem !important;
+        height: auto !important;
     }
 
     .specsGrid {
-        grid-template-columns: 1fr;
-        /* Single column specs */
-        gap: 1.25rem;
-    }
-
-    .reviewGrid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem !important;
+        background: #f8fafc !important;
+        padding: 1.25rem !important;
     }
 
     .reviewsSection {
-        padding: 1.5rem;
-        margin-top: 2rem;
+        padding: 1.5rem 1rem !important;
+        margin-top: 2rem !important;
+    }
+
+    .reviewGrid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
     }
 }
