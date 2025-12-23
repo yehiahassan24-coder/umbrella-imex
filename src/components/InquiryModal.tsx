@@ -68,18 +68,41 @@ export default function InquiryModal({ isOpen, onClose, initialProduct }: Inquir
     };
 
     const handleSubmit = async () => {
-        // Here you would typically post to your API
-        console.log("Submitting form:", formData);
+        try {
+            // Combine extra fields into message body
+            const detailedMessage = `Potential Order Details:
+Product: ${formData.product}
+Volume: ${formData.volume}
+Port: ${formData.port || 'Not specified'}
 
-        // Simulating API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+Additional Notes:
+${formData.message}`;
 
-        alert("Inquiry Sent! We will contact you shortly.");
-        onClose();
-        setStep(1);
-        setFormData({
-            name: '', email: '', phone: '', product: '', volume: '', port: '', message: ''
-        });
+            const res = await fetch('/api/inquiries', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    message: detailedMessage,
+                }),
+            });
+
+            if (res.ok) {
+                alert("Inquiry Sent! We will contact you shortly.");
+                onClose();
+                setStep(1);
+                setFormData({
+                    name: '', email: '', phone: '', product: '', volume: '', port: '', message: ''
+                });
+            } else {
+                alert("Failed to send inquiry. Please try again.");
+            }
+        } catch (error) {
+            console.error('Submission error:', error);
+            alert("An error occurred. Please try again.");
+        }
     };
 
     const handleChange = (field: keyof FormData, value: string) => {
