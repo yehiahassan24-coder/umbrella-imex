@@ -65,12 +65,22 @@ export default function BuyerSegments({ onQuoteRequest }: BuyerSegmentsProps) {
                                 <div className={styles.category}>{segment.category}</div>
                                 <h3 className={styles.title}>{segment.title}</h3>
                                 <p className={styles.painPoint}>{segment.pain} <strong>{segment.solution}</strong></p>
-                                <button
-                                    className={styles.actionBtn}
-                                    onClick={() => onQuoteRequest(segment.title)}
-                                >
-                                    {segment.action}
-                                </button>
+                                {segment.id === 'retail' ? (
+                                    <a
+                                        href="/solutions/retail-shelf-life"
+                                        className={styles.actionBtn}
+                                        style={{ textAlign: 'center', display: 'block' }}
+                                    >
+                                        {segment.action}
+                                    </a>
+                                ) : (
+                                    <button
+                                        className={styles.actionBtn}
+                                        onClick={() => onQuoteRequest(segment.title)}
+                                    >
+                                        {segment.action}
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}
