@@ -2,16 +2,19 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lock } from 'lucide-react';
+import styles from './admin.module.css';
 
 export default function AdminLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setIsLoading(true);
 
         try {
             const res = await fetch('/api/auth/login', {
@@ -20,53 +23,64 @@ export default function AdminLogin() {
                 body: JSON.stringify({ email, password }),
             });
 
+            const data = await res.json();
+
             if (res.ok) {
-                // CSRF token is now in httpOnly cookie, no need to store in sessionStorage
-                // Just redirect to dashboard
+                // CSRF token is in httpOnly cookie
                 router.push('/admin/dashboard');
+                router.refresh(); // Ensure strict auth checks re-run
             } else {
-                const data = await res.json();
-                setError(data.error || 'Invalid email or password');
+                setError(data.error || 'Invalid credentials');
             }
         } catch (err) {
-            setError('Network error. Please try again.');
+            console.error('Login error:', err);
+            setError('System error. Please check your connection or try again later.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f7f9f8' }}>
-            <div style={{ background: 'white', padding: '2.5rem', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', width: '100%', maxWidth: '400px' }}>
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <div style={{ background: 'rgba(31, 61, 43, 0.1)', width: '50px', height: '50px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', color: '#1F3D2B' }}>
+        <div className={styles.container}>
+            <div className={styles.loginCard}>
+                <div className={styles.header}>
+                    <div className={styles.iconWrapper}>
                         <Lock size={24} />
                     </div>
-                    <h1>Admin Login</h1>
+                    <h1 className={styles.title}>Admin Login</h1>
                 </div>
 
-                {error && <div style={{ color: 'red', marginBottom: '1rem', fontSize: '0.9rem', textAlign: 'center' }}>{error}</div>}
+                {error && <div className={styles.errorMessage}>{error}</div>}
 
                 <form onSubmit={handleSubmit}>
-                    <div style={{ marginBottom: '1.2rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Email</label>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>Email</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            style={{ width: '100%', padding: '12px', borderRadius: '6px', border: '1px solid #e0e0e0' }}
+                            className={styles.input}
                             required
+                            disabled={isLoading}
                         />
                     </div>
-                    <div style={{ marginBottom: '1.5rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Password</label>
+                    <div className={styles.formGroupPassword}>
+                        <label className={styles.label}>Password</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            style={{ width: '100%', padding: '12px', borderRadius: '6px', border: '1px solid #e0e0e0' }}
+                            className={styles.input}
                             required
+                            disabled={isLoading}
                         />
                     </div>
-                    <button className="btn btn-primary" style={{ width: '100%' }}>Login</button>
+                    <button
+                        className={styles.button}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? 'Logging in...' : 'Login'}
+                    </button>
                 </form>
             </div>
         </div>

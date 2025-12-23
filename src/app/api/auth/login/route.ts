@@ -9,7 +9,7 @@ import { headers } from 'next/headers';
 export async function POST(request: Request) {
     try {
         // --- Rate Limiting ---
-        const ip = (await headers()).get('x-forwarded-for') || '127.0.0.1';
+        const ip = (await headers()).get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
         const limitResult = await rateLimit(`login:${ip}`, 5, 60);
 
         if (!limitResult.success) {
