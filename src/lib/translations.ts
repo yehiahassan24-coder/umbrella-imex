@@ -3,8 +3,8 @@ export type Language = 'en' | 'fr';
 export const translations = {
     en: {
         home: {
-            heroTitle: "Umbrella Import & Export",
-            heroSubtitle: "We connect farms to global buyers through quality, transparency, and reliable logistics.",
+            heroTitle: "Premium Egyptian Produce for Global Markets",
+            heroSubtitle: "Connecting growers to global buyers with certified quality and reliable logistics.",
             heroDescription: "Umbrella Import & Export is a trusted agricultural export company specializing in supplying premium fresh fruits and vegetables to the Canadian market.",
             whyUmbrella: "Why Umbrella?",
             why1: "Premium quality sourcing",
@@ -85,8 +85,8 @@ export const translations = {
     },
     fr: {
         home: {
-            heroTitle: "Umbrella Import & Export",
-            heroSubtitle: "Nous garantissons qualité, transparence et fiabilité logistique.",
+            heroTitle: "Produits Égyptiens Premium pour les Marchés Mondiaux",
+            heroSubtitle: "Connecter les producteurs aux acheteurs mondiaux avec une qualité certifiée et une logistique fiable.",
             heroDescription: "Umbrella Import & Export est une entreprise spécialisée dans l’exportation de fruits et légumes frais de haute qualité vers le marché canadien.",
             whyUmbrella: "Pourquoi Umbrella ?",
             why1: "Qualité supérieure",

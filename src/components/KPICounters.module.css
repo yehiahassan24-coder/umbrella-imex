@@ -1,0 +1,31 @@
+.counterSection {
+    background: linear-gradient(135deg, var(--color-dark-green, #1e5b3a), var(--color-primary-green, #28a745));
+    padding: 5rem 0;
+    color: white;
+    text-align: center;
+}
+
+.grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 3rem;
+}
+
+.item {
+    flex: 1;
+    min-width: 200px;
+}
+
+.number {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    line-height: 1;
+}
+
+.label {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    font-weight: 500;
+}

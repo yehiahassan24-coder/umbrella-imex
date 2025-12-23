@@ -1,6 +1,7 @@
 import React from 'react';
 import { prisma } from '@/lib/prisma';
-import HomeContent, { Product } from '@/components/HomeContent';
+import HomeContent from '@/components/HomeContent';
+import { Product } from '@/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,5 +29,28 @@ export default async function Home() {
     images: p.images || [],
   }));
 
-  return <HomeContent products={serializedProducts} />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Umbrella Import & Export",
+    "url": "https://umbrella-imex.vercel.app",
+    "description": "Premium agricultural import and export connecting global markets with Egyptian produce.",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+20 100 000 0000",
+      "contactType": "sales",
+      "areaServed": "Global",
+      "availableLanguage": ["English", "French"]
+    }
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <HomeContent products={serializedProducts} />
+    </>
+  );
 }

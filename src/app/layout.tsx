@@ -5,12 +5,13 @@ import { LanguageProvider } from "@/lib/LanguageContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Umbrella Import & Export",
-  description: "Premium bilingual agricultural import & export company.",
+  description: "Premium global agricultural trading platform.",
   icons: {
     icon: '/favicon-new.svg',
   }
@@ -31,6 +32,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <ScrollToTop />
+          <Analytics />
         </LanguageProvider>
       </body>
     </html>

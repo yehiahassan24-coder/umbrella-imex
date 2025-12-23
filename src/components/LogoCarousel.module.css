@@ -1,0 +1,61 @@
+.logoSection {
+    padding: 3rem 0;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.logoContainer {
+    display: flex;
+    width: 200%;
+    animation: scroll 20s linear infinite;
+}
+
+.logoTrack {
+    display: flex;
+    justify-content: space-around;
+    width: 50%;
+    align-items: center;
+}
+
+.logoItem {
+    padding: 0 2rem;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+    filter: grayscale(100%);
+}
+
+.logoItem:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+}
+
+.logoPlaceholder {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 768px) {
+    .logoContainer {
+        width: 400%;
+    }
+
+    .logoTrack {
+        width: 25%;
+    }
+}
