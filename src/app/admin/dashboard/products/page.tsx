@@ -33,7 +33,7 @@ export default async function ProductsAdminPage() {
                 title="Products"
                 description="Inventory management and pricing"
             >
-                <Link href="/admin/dashboard/products/new" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Link href="/admin/dashboard/products/new" className={`btn btn-primary ${styles.addBtn}`}>
                     <Plus size={18} /> Add Product
                 </Link>
             </PageHeader>
