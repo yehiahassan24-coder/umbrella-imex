@@ -21,6 +21,10 @@ export interface Inquiry {
     product?: {
         name_en: string;
     } | null;
+    priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
+    notes?: string;
+    tags?: string[];
+    assignedTo?: string;
 }
 
 export default function InquiriesTable({ inquiries, role }: { inquiries: Inquiry[], role: string }) {
@@ -181,6 +185,16 @@ export default function InquiriesTable({ inquiries, role }: { inquiries: Inquiry
         }
     };
 
+    const getPriorityStyle = (priority: string = 'MEDIUM') => {
+        switch (priority) {
+            case 'LOW': return { bg: '#f1f5f9', color: '#64748b' };
+            case 'MEDIUM': return { bg: '#e0f2fe', color: '#0369a1' };
+            case 'HIGH': return { bg: '#ffedd5', color: '#c2410c' }; // Orange
+            case 'URGENT': return { bg: '#fee2e2', color: '#ef4444' }; // Red
+            default: return { bg: '#f1f5f9', color: '#64748b' };
+        }
+    };
+
     const isOverdue = (createdAt: string) => {
         const receivedDate = new Date(createdAt);
         const now = new Date();
@@ -312,6 +326,7 @@ export default function InquiriesTable({ inquiries, role }: { inquiries: Inquiry
                             </th>
                             <th>Date</th>
                             <th>Customer</th>
+                            <th>Priority</th>
                             <th>Product</th>
                             <th>Pipeline Stage</th>
                             <th style={{ textAlign: 'right' }}>Actions</th>
@@ -353,6 +368,14 @@ export default function InquiriesTable({ inquiries, role }: { inquiries: Inquiry
                                     <td>
                                         <div style={{ fontWeight: 600, color: '#0f172a' }}>{inq.name}</div>
                                         <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{inq.email}</div>
+                                    </td>
+                                    <td>
+                                        <span style={{
+                                            fontSize: '0.75rem', fontWeight: 600, padding: '2px 8px', borderRadius: '4px',
+                                            ...getPriorityStyle(inq.priority)
+                                        }}>
+                                            {inq.priority || 'MEDIUM'}
+                                        </span>
                                     </td>
                                     <td>
                                         {inq.product ? (
@@ -456,7 +479,7 @@ export default function InquiriesTable({ inquiries, role }: { inquiries: Inquiry
                             </div>
 
                             <div className={styles.detailGroup}>
-                                <div className={styles.detailLabel}><LayoutGrid size={16} /> Current Status</div>
+                                <div className={styles.detailLabel}><LayoutGrid size={16} /> Workflow Status</div>
                                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
                                     {(['NEW', 'CONTACTED', 'QUOTED', 'WON', 'LOST'] as InquiryStatus[]).map(s => {
                                         const active = selectedInquiry.status === s;
@@ -484,6 +507,52 @@ export default function InquiriesTable({ inquiries, role }: { inquiries: Inquiry
                                         );
                                     })}
                                 </div>
+                            </div>
+
+                            <div className={styles.detailGroup}>
+                                <div className={styles.detailLabel}><AlertCircle size={16} /> Priority</div>
+                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+                                    {(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).map(p => {
+                                        const active = (selectedInquiry.priority || 'MEDIUM') === p;
+                                        const style = getPriorityStyle(p);
+                                        return (
+                                            <button
+                                                key={p}
+                                                onClick={() => {
+                                                    updateInquiry(selectedInquiry.id, { priority: p as any });
+                                                    setSelectedInquiry({ ...selectedInquiry, priority: p as any });
+                                                }}
+                                                style={{
+                                                    padding: '4px 10px',
+                                                    borderRadius: '4px',
+                                                    fontSize: '0.75rem',
+                                                    fontWeight: 600,
+                                                    border: active ? '2px solid currentColor' : '1px solid #e2e8f0',
+                                                    backgroundColor: active ? style.bg : 'white',
+                                                    color: style.color,
+                                                    cursor: 'pointer',
+                                                    opacity: active ? 1 : 0.7
+                                                }}
+                                            >
+                                                {p}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            <div className={styles.detailGroup} style={{ marginTop: '1rem' }}>
+                                <div className={styles.detailLabel}>Internal Notes</div>
+                                <textarea
+                                    className={styles.input}
+                                    style={{ width: '100%', minHeight: '80px', marginTop: '4px', fontSize: '0.9rem', padding: '8px' }}
+                                    placeholder="Add internal notes about this deal..."
+                                    value={selectedInquiry.notes || ''}
+                                    onChange={(e) => {
+                                        setSelectedInquiry({ ...selectedInquiry, notes: e.target.value });
+                                    }}
+                                    onBlur={(e) => updateInquiry(selectedInquiry.id, { notes: e.target.value })}
+                                />
                             </div>
 
                             <div className={styles.messageBox}>

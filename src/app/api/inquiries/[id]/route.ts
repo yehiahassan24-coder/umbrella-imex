@@ -26,6 +26,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         const data: any = {};
         if (body.is_read !== undefined) data.is_read = body.is_read;
         if (body.status !== undefined) data.status = body.status;
+        if (body.priority !== undefined) data.priority = body.priority;
+        if (body.notes !== undefined) data.notes = body.notes;
+        if (body.tags !== undefined) data.tags = body.tags;
+        if (body.assignedTo !== undefined) data.assignedTo = body.assignedTo;
 
         const inquiry = await prisma.inquiry.update({
             where: { id },

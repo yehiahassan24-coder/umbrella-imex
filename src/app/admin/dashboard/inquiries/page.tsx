@@ -27,6 +27,10 @@ export default async function InquiriesPage() {
         message: inq.message,
         is_read: inq.is_read,
         status: inq.status,
+        priority: inq.priority || 'MEDIUM',
+        notes: inq.notes || '',
+        tags: inq.tags || [],
+        assignedTo: inq.assignedTo,
         product: inq.product ? { name_en: inq.product.name_en } : null,
         createdAt: inq.createdAt.toISOString(),
     }));
