@@ -1,0 +1,50 @@
+.scrollButton {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--color-primary-green, #28A745);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10005;
+    /* Above the commercial bar */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.scrollButton:hover {
+    background-color: var(--color-dark-green, #1E5B3A);
+    transform: scale(1.1);
+}
+
+.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    pointer-events: none;
+}
+
+/* On mobile detail pages where the fixed bar is present */
+@media (max-width: 900px) {
+
+    /* If we are on a page with the fixed bottom bar, move the button up */
+    /* Identifying this via a global class or just applying the shift broadly on mobile */
+    .scrollButton {
+        bottom: 110px;
+        /* Higher than the 80-100px bar */
+        right: 20px;
+        width: 45px;
+        height: 45px;
+    }
+}
