@@ -18,7 +18,11 @@ interface ProductDetailProps {
 
 export default function ProductDetail({ product, relatedProducts = [] }: ProductDetailProps) {
     const { t, language } = useLanguage();
-    const [selectedImage, setSelectedImage] = useState(product.images && product.images.length > 0 ? product.images[0] : null);
+    const [selectedImage, setSelectedImage] = useState(
+        (product.images && product.images.length > 0 && product.images[0])
+            ? product.images[0]
+            : '/images/placeholder.png'
+    );
     const [isZoomed, setIsZoomed] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 

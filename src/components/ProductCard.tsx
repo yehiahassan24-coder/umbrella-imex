@@ -27,7 +27,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     const { t, language } = useLanguage();
 
     const name = language === 'en' ? product.name_en : product.name_fr;
-    const imageUrl = product.images && product.images.length > 0 ? product.images[0] : null;
+    const imageUrl = product.images && product.images.length > 0 && product.images[0] ? product.images[0] : '/images/placeholder.png';
 
     return (
         <div className={styles.card}>
