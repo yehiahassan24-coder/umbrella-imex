@@ -1,7 +1,8 @@
 .scrollButton {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 100px;
+    /* Default desktop - clear any sticky buttons */
+    right: 32px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -14,7 +15,7 @@
     align-items: center;
     justify-content: center;
     z-index: 10005;
-    /* Above the commercial bar */
+    /* Above the commercial bar and CTAs */
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -35,13 +36,10 @@
     pointer-events: none;
 }
 
-/* On mobile detail pages where the fixed bar is present */
+/* On mobile where the fixed bars are higher */
 @media (max-width: 900px) {
-
-    /* If we are on a page with the fixed bottom bar, move the button up */
-    /* Identifying this via a global class or just applying the shift broadly on mobile */
     .scrollButton {
-        bottom: 110px;
+        bottom: 120px;
         /* Higher than the 80-100px bar */
         right: 20px;
         width: 45px;
