@@ -1,6 +1,7 @@
 import React from 'react';
 import { prisma } from '@/lib/prisma';
-import ProductList, { Product } from '@/components/ProductList';
+import ProductList from '@/components/ProductList';
+import { Product } from '@/types';
 
 // Force dynamic rendering so we always get fresh data (or we can use revalidate)
 export const dynamic = 'force-dynamic';

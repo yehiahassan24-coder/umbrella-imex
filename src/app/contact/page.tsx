@@ -81,7 +81,13 @@ export default function Contact() {
                             <div>
                                 <h3 className={styles.itemTitle}>Call Us</h3>
                                 <p className={styles.itemText} style={{ marginBottom: '4px' }}>+1 (514) 555-0123</p>
-                                <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>Mon-Fri, 9am - 5pm EST</span>
+                                <a href="https://wa.me/15145550123" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#25D366', fontWeight: 600, fontSize: '0.9rem', marginBottom: '4px', textDecoration: 'none' }}>
+                                    Chat on WhatsApp
+                                </a>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#166534', background: '#dcfce7', width: 'fit-content', padding: '2px 8px', borderRadius: '4px', marginTop: '4px' }}>
+                                    <div style={{ width: '6px', height: '6px', background: '#166534', borderRadius: '50%' }}></div>
+                                    Response time: ~2 hours
+                                </div>
                             </div>
                         </div>
 
