@@ -73,7 +73,7 @@ export function GlobalReach() {
                         src="/images/global-map.png"
                         alt="Global Export Map"
                         fill
-                        style={{ objectFit: 'contain', padding: '2rem' }}
+                        style={{ objectFit: 'cover' }}
                     />
                 </div>
             </div>
