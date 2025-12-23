@@ -17,8 +17,7 @@ export default function BuyerSegments({ onQuoteRequest }: BuyerSegmentsProps) {
             pain: 'Need reliable seasonal volume with consistent grading and sizing standards?',
             solution: 'We prioritize large-scale contracts with guaranteed allocation during peak seasons.',
             action: 'Request Wholesale Pricing',
-            icon: Building2,
-            image: '/images/segment-wholesale.jpg' // You would typically have real images
+            image: '/images/segments/wholesale.png'
         },
         {
             id: 'distribution',
@@ -27,8 +26,7 @@ export default function BuyerSegments({ onQuoteRequest }: BuyerSegmentsProps) {
             pain: 'Tired of gaps in supply chain and communication black holes?',
             solution: 'Dedicated account managers and real-time shipment tracking for every container.',
             action: 'Discuss Distribution',
-            icon: TruckIcon,
-            image: '/images/segment-distributor.jpg'
+            image: '/images/segments/distribution.png'
         },
         {
             id: 'retail',
@@ -37,8 +35,7 @@ export default function BuyerSegments({ onQuoteRequest }: BuyerSegmentsProps) {
             pain: 'Need produce that arrives fresh and ready for the shelf?',
             solution: 'Optimized cold chain logistics ensuring maximum shelf life superior appearance.',
             action: 'View Retail Solutions',
-            icon: Store,
-            image: '/images/segment-retail.jpg'
+            image: '/images/segments/retail.png'
         }
     ];
 
@@ -52,9 +49,17 @@ export default function BuyerSegments({ onQuoteRequest }: BuyerSegmentsProps) {
                 <div className={styles.grid}>
                     {segments.map((segment) => (
                         <div key={segment.id} className={styles.card}>
-                            <div className={styles.imageArea} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9' }}>
-                                {/* Placeholder for image */}
-                                <segment.icon size={64} color="#CBD5E0" />
+                            <div className={styles.imageArea} style={{ position: 'relative', height: '200px', overflow: 'hidden' }}>
+                                <Image
+                                    src={segment.image}
+                                    alt={segment.title}
+                                    fill
+                                    style={{ objectFit: 'cover' }}
+                                />
+                                <div style={{
+                                    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                                    background: 'linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.4))'
+                                }} />
                             </div>
                             <div className={styles.content}>
                                 <div className={styles.category}>{segment.category}</div>
