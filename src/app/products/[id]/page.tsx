@@ -38,11 +38,12 @@ export default async function Page({ params }: Props) {
         notFound();
     }
 
-    // Fetch related products (same category, exclude current)
-    const relatedProducts = await prisma.product.findMany({
+    // Fetch related products (smart logic: same category first, then fallback to general)
+    let relatedProducts = await prisma.product.findMany({
         where: {
             category: product.category,
-            id: { not: product.id }
+            id: { not: product.id },
+            is_active: true
         },
         take: 4,
         select: {
@@ -54,6 +55,29 @@ export default async function Page({ params }: Props) {
             slug: true,
         }
     });
+
+    // If not enough related products found, fill with other available products
+    if (relatedProducts.length < 4) {
+        const fallback = await prisma.product.findMany({
+            where: {
+                id: {
+                    notIn: [product.id, ...relatedProducts.map(p => p.id)]
+                },
+                is_active: true
+            },
+            take: 4 - relatedProducts.length,
+            orderBy: { createdAt: 'desc' },
+            select: {
+                id: true,
+                name_en: true,
+                price: true,
+                images: true,
+                category: true,
+                slug: true,
+            }
+        });
+        relatedProducts = [...relatedProducts, ...fallback];
+    }
 
     // Convert dates and handle nulls
     const serializedProduct = {
