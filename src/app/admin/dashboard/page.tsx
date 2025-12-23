@@ -45,13 +45,13 @@ export default async function DashboardOverview() {
 
     return (
         <div className={styles.dashboardPage}>
-            <div className={styles.header}>
+            <div className={styles.pageHeader}>
                 <div>
-                    <h1 style={{ margin: 0, fontSize: '1.875rem', fontWeight: 700 }}>Overview</h1>
-                    <p style={{ color: '#64748b', marginTop: '0.25rem' }}>Business metrics and trends from the last 14 days</p>
+                    <h1 className={styles.pageTitle}>Overview</h1>
+                    <p className={styles.pageSubtitle}>Business metrics and trends from the last 14 days</p>
                 </div>
-                <div style={{ display: 'flex', gap: '0.75rem' }}>
-                    <Link href="/admin/dashboard/products/new" className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>
+                <div className={styles.actionButtons}>
+                    <Link href="/admin/dashboard/products/new" className={`btn btn-primary ${styles.addBtn}`}>
                         + Add Product
                     </Link>
                 </div>
@@ -72,9 +72,9 @@ export default async function DashboardOverview() {
             </div>
 
             <div style={{ marginBottom: '2.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1.5rem' }}>
+                <div className={styles.sectionHeader}>
                     <TrendingUp size={20} color="#1F3D2B" />
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 600, margin: 0 }}>Analytics In-Depth</h2>
+                    <h2 className={styles.sectionTitle}>Analytics In-Depth</h2>
                 </div>
                 <DashboardCharts
                     chartData={data.charts.inquiriesTrend}
@@ -84,10 +84,10 @@ export default async function DashboardOverview() {
 
             <div className={styles.dashboardGrid}>
                 <div className={styles.card} style={{ gridColumn: 'span 12' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <div className={styles.pageHeader} style={{ marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <BarChart2 size={20} color="#1F3D2B" />
-                            <h3 style={{ margin: 0, fontSize: '1.125rem', fontWeight: 600 }}>Most Recent Inquiries</h3>
+                            <h3 className={styles.sectionTitle} style={{ fontSize: '1.125rem' }}>Most Recent Inquiries</h3>
                         </div>
                         <Link href="/admin/dashboard/inquiries" className={styles.viewAllBtn}>
                             View All Inquiries
