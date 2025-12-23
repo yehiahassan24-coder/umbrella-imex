@@ -49,9 +49,24 @@ export function GlobalReach() {
             <div className="container">
                 <div className={styles.mapContent}>
                     <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: '#1e5b3a' }}>Serving Global Markets</h2>
-                    <p style={{ fontSize: '1.2rem', color: '#4a5568' }}>
+                    <p style={{ fontSize: '1.2rem', color: '#4a5568', marginBottom: '1.5rem' }}>
                         Our specialized logistics network connects Egyptian agriculture with key markets in Europe, the Middle East, and Asia.
                     </p>
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        {['United Kingdom', 'France', 'Germany', 'Netherlands', 'UAE', 'Saudi Arabia', 'Russia'].map(country => (
+                            <span key={country} style={{
+                                background: '#e6fffa',
+                                color: '#1E5B3A',
+                                padding: '0.5rem 1rem',
+                                borderRadius: '20px',
+                                fontSize: '0.9rem',
+                                fontWeight: 600,
+                                border: '1px solid #b2f5ea'
+                            }}>
+                                {country}
+                            </span>
+                        ))}
+                    </div>
                 </div>
                 <div className={styles.mapImageContainer}>
                     <Image

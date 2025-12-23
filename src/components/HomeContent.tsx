@@ -16,6 +16,10 @@ import BuyerSegments from '@/components/BuyerSegments';
 import QualityCertifications from '@/components/QualityCertifications';
 import StickyCTA from '@/components/StickyCTA';
 
+// ... (previous imports)
+import LeadershipMessage from '@/components/LeadershipMessage';
+import { track } from '@vercel/analytics/react';
+
 export default function HomeContent({ products }: { products: Product[] }) {
     const { t } = useLanguage();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,10 +28,14 @@ export default function HomeContent({ products }: { products: Product[] }) {
     const openModal = (productName?: string) => {
         setSelectedProduct(productName || '');
         setIsModalOpen(true);
+        track('Inquiry Modal Opened', { product: productName || 'General' });
     };
 
     return (
         <>
+            {/* ... (rest of the component) */}
+            {/* ... (Hero, HowItWorks, BuyerSegments, ProductCarousel, QualityCertifications, KPICounters, GlobalReach, LogoCarousel, Benefits) */}
+
             <InquiryModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
@@ -58,7 +66,7 @@ export default function HomeContent({ products }: { products: Product[] }) {
             {/* 2. Visual Storytelling - How It Works */}
             <HowItWorks />
 
-            {/* 3. Buyer Segments (Who We Serve) - NEW */}
+            {/* 3. Buyer Segments (Who We Serve) */}
             <BuyerSegments onQuoteRequest={(s) => openModal(s)} />
 
             {/* 4. Rich Product Preview - Carousel */}
@@ -74,25 +82,52 @@ export default function HomeContent({ products }: { products: Product[] }) {
                 </div>
             </section>
 
-            {/* 5. Quality Certifications - NEW */}
+            {/* 5. Quality Certifications (Gray Bg) */}
             <QualityCertifications />
 
             {/* 6. Metrics / Trust Signals */}
             <KPICounters />
 
-            {/* 7. Global Reach Map */}
+            {/* 7. Leadership Message - NEW (Human Presence) */}
+            <LeadershipMessage />
+
+            {/* 8. Global Reach Map (Gray Bg) */}
             <GlobalReach />
 
-            {/* 8. Customer Logos / Social Proof */}
+            {/* 9. Customer Logos / Social Proof (White Bg) */}
             <LogoCarousel />
 
-            {/* 9. StoryBlocks - Benefits */}
+            {/* 10. StoryBlocks - Benefits (Light Bg) */}
             <Benefits />
 
-            {/* 10. Modern Testimonials */}
+            {/* 11. Secondary CTA "Safety Net" - NEW */}
+            <section style={{ padding: '3rem 0', background: 'white', textAlign: 'center', borderTop: '1px solid #edf2f7' }}>
+                <div className="container">
+                    <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#2d3748' }}>Not ready for a full quote?</h3>
+                    <button
+                        onClick={() => openModal('General Consultation')}
+                        style={{
+                            background: 'transparent',
+                            border: '2px solid #28a745',
+                            color: '#28a745',
+                            padding: '12px 24px',
+                            borderRadius: '50px',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
+                        onMouseOver={(e) => { e.currentTarget.style.background = '#f0fff4' }}
+                        onMouseOut={(e) => { e.currentTarget.style.background = 'transparent' }}
+                    >
+                        Talk to an Export Specialist
+                    </button>
+                </div>
+            </section>
+
+            {/* 12. Modern Testimonials (Gray Bg) */}
             <TestimonialCarousel />
 
-            {/* 11. Final CTA Area */}
+            {/* 13. Final CTA Area */}
             <section className={styles.ctaBanner}>
                 <div className="container">
                     <h2>Ready to elevate your supply chain?</h2>

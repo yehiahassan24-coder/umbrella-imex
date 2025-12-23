@@ -29,7 +29,7 @@ export default async function Home() {
     images: p.images || [],
   }));
 
-  const jsonLd = {
+  const educationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Umbrella Import & Export",
@@ -44,11 +44,45 @@ export default async function Home() {
     }
   };
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "What is the Minimum Order Quantity (MOQ)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our typical MOQ is one 20ft container (approx 10-12 tons) depending on the crop. We can consolidate mixed pallets for trial orders."
+      }
+    }, {
+      "@type": "Question",
+      "name": "Do you have certification for EU markets?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, we hold Global G.A.P, ISO 9001:2015, and organic certifications compliant with strict EU import standards."
+      }
+    }, {
+      "@type": "Question",
+      "name": "What are your shipping terms?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We offer flexible IncoTerms including FOB, CIF, and DDP to major global ports in Europe, Middle East, and Asia."
+      }
+    }, {
+      "@type": "Question",
+      "name": "Can you provide private labeling?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, we offer custom packaging and private labeling services for supermarkets and distributors."
+      }
+    }]
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([educationSchema, faqSchema]) }}
       />
       <HomeContent products={serializedProducts} />
     </>
