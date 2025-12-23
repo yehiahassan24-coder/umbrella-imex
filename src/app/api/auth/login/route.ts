@@ -95,7 +95,6 @@ export async function POST(request: Request) {
                 email: user.email,
                 role: user.role
             }
-            // ✅ CSRF token NOT sent in body - only in httpOnly cookie
         });
 
         // Admin Token (HTTP-Only)
@@ -110,6 +109,15 @@ export async function POST(request: Request) {
         // CSRF Token Cookie (HTTP-Only for server validation)
         response.cookies.set('csrf-token', csrfToken, {
             httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 24,
+            path: '/',
+        });
+
+        // CSRF Token for Client Header (NOT httpOnly so JS can read it)
+        response.cookies.set('csrf-token-client', csrfToken, {
+            httpOnly: false, // ✅ JavaScript can read this
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
             maxAge: 60 * 60 * 24,

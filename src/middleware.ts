@@ -47,6 +47,7 @@ export async function middleware(request: NextRequest) {
             const response = NextResponse.redirect(new URL('/admin', request.url));
             response.cookies.delete('admin-token');
             response.cookies.delete('csrf-token');
+            response.cookies.delete('csrf-token-client');
             response.cookies.delete('is-authenticated');
             return response;
         }

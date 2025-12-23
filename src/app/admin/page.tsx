@@ -13,21 +13,23 @@ export default function AdminLogin() {
         e.preventDefault();
         setError('');
 
-        const res = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-        });
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
 
-        if (res.ok) {
-            const data = await res.json();
-            if (data.csrfToken) {
-                sessionStorage.setItem('csrf-token', data.csrfToken);
+            if (res.ok) {
+                // CSRF token is now in httpOnly cookie, no need to store in sessionStorage
+                // Just redirect to dashboard
+                router.push('/admin/dashboard');
+            } else {
+                const data = await res.json();
+                setError(data.error || 'Invalid email or password');
             }
-            router.push('/admin/dashboard');
-        } else {
-            const data = await res.json();
-            setError(data.error || 'Invalid email or password');
+        } catch (err) {
+            setError('Network error. Please try again.');
         }
     };
 
