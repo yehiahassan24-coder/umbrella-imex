@@ -23,7 +23,16 @@ export default function AdminLogin() {
                 body: JSON.stringify({ email, password }),
             });
 
-            const data = await res.json();
+            let data;
+            try {
+                data = await res.json();
+            } catch (jsonError) {
+                console.error('JSON Parse Error:', jsonError);
+                // If it's not JSON, it's likely a Vercel 500 error page
+                const text = await res.text().catch(() => 'No response body');
+                console.error('Raw Response:', text);
+                throw new Error(`Server Error (${res.status}): The server returned an invalid response.`);
+            }
 
             if (res.ok) {
                 // CSRF token is in httpOnly cookie
@@ -32,9 +41,10 @@ export default function AdminLogin() {
             } else {
                 setError(data.error || 'Invalid credentials');
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Login error:', err);
-            setError('System error. Please check your connection or try again later.');
+            // Show the actual error message if possible to help debugging
+            setError(err.message || 'System error. Please check your connection or try again later.');
         } finally {
             setIsLoading(false);
         }
