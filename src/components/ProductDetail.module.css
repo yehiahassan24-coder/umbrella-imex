@@ -705,11 +705,33 @@
     }
 
     .relatedSection {
-        padding: 4rem 1rem 120px !important;
+        padding: 4rem 1rem 140px !important;
+        /* Space for the fixed total bar */
     }
 
     .relatedGrid {
-        grid-template-columns: 1fr !important;
-        gap: 2rem !important;
+        display: flex !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        gap: 1.25rem !important;
+        padding: 0 0 1.5rem 0 !important;
+        margin: 0 -1rem !important;
+        /* Negative margin to let cards touch screen edges while scrolling */
+        padding: 0 1rem 1.5rem 1rem !important;
+        /* Re-add padding inside */
+        scroll-snap-type: x mandatory !important;
+        scrollbar-width: none !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .relatedGrid::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .relatedCard {
+        min-width: 280px !important;
+        max-width: 280px !important;
+        scroll-snap-align: center !important;
+        margin: 0 !important;
     }
 }
