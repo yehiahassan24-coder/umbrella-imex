@@ -11,4 +11,11 @@ export interface Product {
     moq: number;
     quantity: number;
     images?: string[];
+    // Extended fields
+    sku?: string | null;
+    slug?: string;
+    tags?: string[];
+    isFeatured?: boolean;
+    is_active?: boolean;
+    createdAt?: string;
 }

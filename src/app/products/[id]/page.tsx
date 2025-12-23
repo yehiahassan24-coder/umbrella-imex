@@ -38,11 +38,58 @@ export default async function Page({ params }: Props) {
         notFound();
     }
 
+    // Fetch related products (same category, exclude current)
+    const relatedProducts = await prisma.product.findMany({
+        where: {
+            category: product.category,
+            id: { not: product.id }
+        },
+        take: 4,
+        select: {
+            id: true,
+            name_en: true,
+            price: true,
+            images: true,
+            category: true,
+            slug: true,
+        }
+    });
+
     // Convert dates and handle nulls
     const serializedProduct = {
         ...product,
         createdAt: product.createdAt.toISOString(),
     };
 
-    return <ProductDetail product={serializedProduct} />;
+    // SEO Structured Data (JSON-LD)
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: product.name_en,
+        image: product.images,
+        description: product.desc_en,
+        sku: product.sku || product.id,
+        brand: {
+            '@type': 'Brand',
+            name: 'Umbrella Import'
+        },
+        offers: {
+            '@type': 'Offer',
+            url: `https://umbrella-imex.vercel.app/products/${product.slug}`,
+            priceCurrency: 'USD',
+            price: product.price,
+            availability: product.quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+            itemCondition: 'https://schema.org/NewCondition'
+        }
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <ProductDetail product={serializedProduct} relatedProducts={relatedProducts} />
+        </>
+    );
 }
