@@ -9,7 +9,7 @@ import {
     CheckCircle, TrendingUp, ArrowDownRight,
     Search, LayoutGrid, Calendar
 } from 'lucide-react';
-import InquiryTrigger from '@/components/InquiryTrigger';
+import InquiryTrigger from '@/components/inquiry/InquiryTrigger';
 
 export const metadata: Metadata = {
     title: 'Retail Shelf-Life Solutions | Umbrella Import & Export',

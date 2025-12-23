@@ -11,7 +11,7 @@ import ProductCarousel from '@/components/ProductCarousel';
 import LogoCarousel from '@/components/LogoCarousel';
 import KPICounters from '@/components/KPICounters';
 import TestimonialCarousel from '@/components/TestimonialCarousel';
-import InquiryModal from '@/components/InquiryModal';
+import InquiryModal from '@/components/inquiry/InquiryModal';
 import BuyerSegments from '@/components/BuyerSegments';
 import QualityCertifications from '@/components/QualityCertifications';
 import StickyCTA from '@/components/StickyCTA';

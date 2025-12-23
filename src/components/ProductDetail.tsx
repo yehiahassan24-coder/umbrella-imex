@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { Product } from '@/types';
-import InquiryModal from './InquiryModal';
+import InquiryModal from './inquiry/InquiryModal';
 
 interface ProductDetailProps {
     product: Product;
