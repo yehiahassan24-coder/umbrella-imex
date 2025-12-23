@@ -62,3 +62,29 @@
     color: #4a5568;
     font-size: 0.9rem;
 }
+
+@media (max-width: 768px) {
+    .section {
+        padding: 4rem 0;
+    }
+
+    .certGrid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        /* 2x2 grid */
+        gap: 2rem;
+    }
+
+    .certItem {
+        width: auto;
+    }
+
+    .iconWrapper {
+        width: 60px;
+        height: 60px;
+    }
+
+    .certLabel {
+        font-size: 0.8rem;
+    }
+}

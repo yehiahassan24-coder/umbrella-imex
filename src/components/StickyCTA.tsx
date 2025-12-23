@@ -64,8 +64,8 @@ export default function StickyCTA({ onOpenModal }: StickyCTAProps) {
                     right: 0,
                     zIndex: 90,
                     backgroundColor: 'white',
-                    padding: '1rem',
-                    boxShadow: '0 -4px 20px rgba(0,0,0,0.1)',
+                    padding: '0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom)) 1rem', // Safe Area
+                    boxShadow: '0 -4px 10px rgba(0,0,0,0.05)',
                     borderTop: '1px solid #e2e8f0',
                     animation: 'slideUp 0.3s ease-out'
                 }}>
@@ -75,13 +75,19 @@ export default function StickyCTA({ onOpenModal }: StickyCTAProps) {
                             width: '100%',
                             backgroundColor: '#28A745',
                             color: 'white',
-                            padding: '0.875rem',
+                            padding: '0.75rem',
                             borderRadius: '8px',
-                            fontWeight: 700,
+                            fontWeight: 600,
                             border: 'none',
-                            fontSize: '1rem'
+                            fontSize: '1rem',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
                         }}
                     >
+                        <MessageSquareText size={18} />
                         Request Quote
                     </button>
                 </div>

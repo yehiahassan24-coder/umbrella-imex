@@ -29,3 +29,28 @@
     opacity: 0.9;
     font-weight: 500;
 }
+
+@media (max-width: 768px) {
+    .counterSection {
+        padding: 4rem 0;
+    }
+
+    .grid {
+        flex-direction: column;
+        /* Stack vertically */
+        gap: 2.5rem;
+    }
+
+    .item {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .number {
+        font-size: 3rem;
+    }
+
+    .label {
+        font-size: 1rem;
+    }
+}

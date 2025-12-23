@@ -44,6 +44,9 @@
     height: 200px;
     background: #e2e8f0;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .content {
@@ -88,9 +91,40 @@
     cursor: pointer;
     transition: all 0.2s;
     text-align: center;
+    min-height: 48px;
+    /* Tap target */
 }
 
 .actionBtn:hover {
     background: var(--color-dark-green, #1e5b3a);
     color: white;
+}
+
+@media (max-width: 768px) {
+    .section {
+        padding: 4rem 0;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        /* One card per row */
+        gap: 1.5rem;
+    }
+
+    .heading {
+        margin-bottom: 2.5rem;
+    }
+
+    .imageArea {
+        height: 160px;
+        /* Reduced height */
+    }
+
+    .content {
+        padding: 1.5rem;
+    }
+
+    .title {
+        font-size: 1.25rem;
+    }
 }

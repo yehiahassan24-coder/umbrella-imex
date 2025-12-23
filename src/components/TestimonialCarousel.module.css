@@ -97,3 +97,29 @@
 .next {
     right: 0;
 }
+
+@media (max-width: 768px) {
+    .carouselContainer {
+        padding: 0;
+        max-width: 100%;
+    }
+
+    .navButton {
+        display: none;
+        /* Hide nav buttons on mobile */
+    }
+
+    .content {
+        padding: 2rem 1.5rem;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .text {
+        font-size: 1.1rem;
+    }
+
+    .slideTrack {
+        min-height: auto;
+    }
+}

@@ -157,3 +157,27 @@
 .quoteBtn:hover {
     background: var(--color-dark-green, #1e5b3a);
 }
+
+@media (max-width: 768px) {
+    .scrollArea {
+        padding: 1rem 20px;
+        /* Aligns with container padding */
+        gap: 1rem;
+        padding-right: 20%;
+        /* Show partial next card */
+    }
+
+    .carouselItem {
+        width: 260px;
+        /* Slightly smaller */
+    }
+
+    .carouselContainer {
+        margin-top: 1rem;
+    }
+
+    .controls {
+        display: none;
+        /* Hide arrows on mobile, rely on swipe */
+    }
+}

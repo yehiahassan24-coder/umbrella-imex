@@ -226,16 +226,79 @@
   }
 }
 
+/* Mobile & Tablet Styles */
+@media (max-width: 1024px) {
+  .sectionTitle {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .hero {
+    padding: 0 16px;
+    height: auto;
+    min-height: 500px;
+    padding-top: 80px;
+    /* Account for navbar */
+    padding-bottom: 60px;
+  }
+
+  .hero h1 {
+    font-size: 2.25rem;
+    line-height: 1.2;
+  }
+
+  .hero p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
   .aboutGrid {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .sectionTitle {
-    font-size: 2rem;
+    font-size: 1.75rem;
+    margin-bottom: 2.5rem;
   }
 
   .inquiryCard {
     padding: 2rem;
+  }
+
+  /* Reduced Vertical Padding globally */
+  .featuresSection,
+  .aboutSection,
+  .productSection,
+  .testimonialSection,
+  .inquirySection {
+    padding: 4rem 0;
+  }
+
+  .ctaBanner {
+    padding: 3rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  /* Ensure only 1 primary CTA is dominant, though in page.tsx we use classes.
+       We might need to adjust page.tsx layout logic via CSS if possible 
+       or rely on the flex wrap.
+    */
+
+  .featuresSection,
+  .aboutSection,
+  .productSection {
+    padding: 3rem 0;
   }
 }
