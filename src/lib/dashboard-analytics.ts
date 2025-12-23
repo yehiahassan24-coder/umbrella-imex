@@ -12,6 +12,8 @@ export async function getDashboardAnalytics() {
         newInquiries,
         inquiriesTrend,
         productsByCategory,
+        highPriorityLeads,
+        overdueInquiries,
     ] = await Promise.all([
         prisma.product.count(),
         prisma.product.count({
@@ -42,6 +44,18 @@ export async function getDashboardAnalytics() {
             _count: {
                 id: true
             },
+        }),
+        // 🚨 High Priority Leads (High + Urgent)
+        prisma.inquiry.count({
+            where: { priority: { in: ['HIGH', 'URGENT'] as any } }
+        }),
+
+        // ⚠️ Overdue (New + Older than 24h)
+        prisma.inquiry.count({
+            where: {
+                status: 'NEW',
+                createdAt: { lte: new Date(now.getTime() - 24 * 60 * 60 * 1000) }
+            }
         }),
     ]);
 
@@ -74,6 +88,8 @@ export async function getDashboardAnalytics() {
             activeProducts,
             totalInquiries,
             newInquiries,
+            highPriorityLeads,
+            overdueInquiries,
         },
         charts: {
             inquiriesTrend: chartData,

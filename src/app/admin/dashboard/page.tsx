@@ -1,7 +1,7 @@
 import React from 'react';
 import { prisma } from '@/lib/prisma';
 import styles from './dashboard.module.css';
-import { Package, MessageSquare, Clock, ShoppingBag, Eye, TrendingUp, BarChart2 } from 'lucide-react';
+import { Package, MessageSquare, Clock, ShoppingBag, Eye, TrendingUp, BarChart2, AlertTriangle, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import DashboardCharts from './components/DashboardCharts';
 import { getDashboardAnalytics } from '@/lib/dashboard-analytics';
@@ -35,7 +35,8 @@ export default async function DashboardOverview() {
         { label: 'Total Products', value: data.kpis.totalProducts, icon: Package, color: '#0f172a', bg: '#f1f5f9' },
         { label: 'Active Products', value: data.kpis.activeProducts, icon: ShoppingBag, color: '#166534', bg: '#f0fdf4' },
         { label: 'Total Inquiries', value: data.kpis.totalInquiries, icon: MessageSquare, color: '#92400e', bg: '#fffbeb' },
-        { label: 'New (7 Days)', value: data.kpis.newInquiries, icon: Clock, color: '#991b1b', bg: '#fef2f2' },
+        { label: 'High Priority', value: data.kpis.highPriorityLeads, icon: AlertCircle, color: '#c2410c', bg: '#ffedd5' },
+        { label: 'Action Needed', value: data.kpis.overdueInquiries, icon: AlertTriangle, color: '#ef4444', bg: '#fee2e2' },
     ];
 
     if (role === 'SUPER_ADMIN') {

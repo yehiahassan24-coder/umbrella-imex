@@ -111,7 +111,8 @@ export default function ResourcesPage() {
                     <p style={{ opacity: 0.9, maxWidth: '600px', margin: '0 auto 2rem', fontSize: '1.1rem' }}>
                         Our team provides custom reports on seasonal availability and pricing forecasts for wholesale partners.
                     </p>
-                    <Link href="/contact" style={{
+                    {/* Updated CTA to pass source query param */}
+                    <Link href="/contact?source=market_report_request" style={{
                         background: 'white',
                         color: '#1E5B3A',
                         padding: '16px 32px',
