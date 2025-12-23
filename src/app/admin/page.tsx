@@ -36,8 +36,8 @@ export default function AdminLogin() {
 
             if (res.ok) {
                 // CSRF token is in httpOnly cookie
-                router.push('/admin/dashboard');
-                router.refresh(); // Ensure strict auth checks re-run
+                // Force a hard navigation to ensure cookies are sent and middleware re-runs
+                window.location.href = '/admin/dashboard';
             } else {
                 setError(data.error || 'Invalid credentials');
             }
