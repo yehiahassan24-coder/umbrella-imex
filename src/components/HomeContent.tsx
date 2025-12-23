@@ -15,9 +15,8 @@ import InquiryModal from '@/components/InquiryModal';
 import BuyerSegments from '@/components/BuyerSegments';
 import QualityCertifications from '@/components/QualityCertifications';
 import StickyCTA from '@/components/StickyCTA';
-
-// ... (previous imports)
 import LeadershipMessage from '@/components/LeadershipMessage';
+import CaseStudies from '@/components/CaseStudies';
 import { track } from '@vercel/analytics/react';
 
 export default function HomeContent({ products }: { products: Product[] }) {
@@ -33,9 +32,6 @@ export default function HomeContent({ products }: { products: Product[] }) {
 
     return (
         <>
-            {/* ... (rest of the component) */}
-            {/* ... (Hero, HowItWorks, BuyerSegments, ProductCarousel, QualityCertifications, KPICounters, GlobalReach, LogoCarousel, Benefits) */}
-
             <InquiryModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
@@ -127,7 +123,10 @@ export default function HomeContent({ products }: { products: Product[] }) {
             {/* 12. Modern Testimonials (Gray Bg) */}
             <TestimonialCarousel />
 
-            {/* 13. Final CTA Area */}
+            {/* 13. Case Studies - NEW (Success Stories) */}
+            <CaseStudies />
+
+            {/* 14. Final CTA Area */}
             <section className={styles.ctaBanner}>
                 <div className="container">
                     <h2>Ready to elevate your supply chain?</h2>

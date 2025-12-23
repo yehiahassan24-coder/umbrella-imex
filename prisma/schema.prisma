@@ -22,6 +22,14 @@ enum InquiryStatus {
   LOST
 }
 
+// Phase 2 Upgrade: Inquiry Prioritization
+enum InquiryPriority {
+    LOW
+    MEDIUM
+    HIGH
+    URGENT
+}
+
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -87,13 +95,19 @@ model Inquiry {
   message   String
   is_read   Boolean       @default(false)
   status    InquiryStatus @default(NEW)
+  
+  // Phase 2 Upgrade: Sales Enablement Fields
+  priority  InquiryPriority @default(MEDIUM)
+  notes     String?        // Internal notes for sales team
+  tags      String[]       // e.g. ["Sample Request", "Wholesale", "Retail"]
+  assignedTo String?       // User ID of sales rep
+
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 }
 
 model RateLimit {
-  key       String   @id // e.g., "ratelimit:login:1.2.3.4"
+  key       String   @id
   count     Int      @default(0)
   resetAt   DateTime
 }
-
