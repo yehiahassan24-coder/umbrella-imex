@@ -4,7 +4,26 @@ import { verifyJWT } from '@/lib/auth';
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
+    const method = request.method;
     const token = request.cookies.get('admin-token')?.value;
+
+    // --- CSRF PROTECTION ---
+    const isMutating = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);
+    const isApiRoute = pathname.startsWith('/api/');
+    const isPublicApi = pathname === '/api/auth/login' ||
+        pathname === '/api/setup' ||
+        (pathname === '/api/inquiries' && method === 'POST');
+
+    if (isApiRoute && isMutating && !isPublicApi) {
+        const csrfTokenHeader = request.headers.get('x-csrf-token');
+        const csrfTokenCookie = request.cookies.get('csrf-token')?.value;
+
+        if (!csrfTokenHeader || !csrfTokenCookie || csrfTokenHeader !== csrfTokenCookie) {
+            return NextResponse.json({ error: 'CSRF validation failed' }, { status: 403 });
+        }
+    }
+
+    // --- DASHBOARD PROTECTION ---
 
     // 1. Handle Admin Login Page Redirect
     if (pathname === '/admin') {
@@ -27,6 +46,8 @@ export async function middleware(request: NextRequest) {
         if (payload.isActive === false) {
             const response = NextResponse.redirect(new URL('/admin', request.url));
             response.cookies.delete('admin-token');
+            response.cookies.delete('csrf-token');
+            response.cookies.delete('is-authenticated');
             return response;
         }
 
@@ -51,5 +72,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/admin/:path*'],
+    matcher: ['/admin/:path*', '/api/:path*'],
 };

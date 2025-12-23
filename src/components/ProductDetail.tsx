@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
 import styles from './ProductDetail.module.css';
 import { ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 
 interface Product {
     id: string;
@@ -17,12 +18,14 @@ interface Product {
     season: string;
     moq: number;
     quantity: number;
+    images?: string[];
 }
 
 export default function ProductDetail({ product }: { product: Product }) {
     const { t, language } = useLanguage();
     const [sending, setSending] = useState(false);
     const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [selectedImage, setSelectedImage] = useState(product.images && product.images.length > 0 ? product.images[0] : null);
 
     // Derived content
     const name = language === 'en' ? product.name_en : product.name_fr;
@@ -73,10 +76,46 @@ export default function ProductDetail({ product }: { product: Product }) {
                 <div className={styles.grid}>
                     {/* Left: Image */}
                     <div className={styles.imageContainer}>
-                        {/* Placeholder for image */}
-                        <div style={{ width: '100%', height: '100%', background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: '2rem' }}>
-                            {name}
-                        </div>
+                        {selectedImage ? (
+                            <>
+                                <Image
+                                    src={selectedImage}
+                                    alt={name}
+                                    width={600}
+                                    height={600}
+                                    className={styles.mainImage}
+                                    style={{ width: '100%', height: 'auto', borderRadius: '12px', objectFit: 'cover', aspectRatio: '1/1' }}
+                                    priority
+                                />
+                                {product.images && product.images.length > 1 && (
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px', overflowX: 'auto', paddingBottom: '5px' }}>
+                                        {product.images.map((img, idx) => (
+                                            <Image
+                                                key={idx}
+                                                src={img}
+                                                alt={`${name} ${idx + 1}`}
+                                                width={80}
+                                                height={80}
+                                                onClick={() => setSelectedImage(img)}
+                                                style={{
+                                                    width: '80px',
+                                                    height: '80px',
+                                                    borderRadius: '8px',
+                                                    objectFit: 'cover',
+                                                    cursor: 'pointer',
+                                                    border: selectedImage === img ? '2px solid var(--color-gold)' : '2px solid transparent',
+                                                    flexShrink: 0
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <div style={{ width: '100%', height: '400px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: '1.5rem', borderRadius: '12px', flexDirection: 'column', gap: '1rem' }}>
+                                <span>No Image Available</span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Right: Details */}

@@ -25,6 +25,7 @@ export default async function Home() {
     season: p.season,
     moq: Number(p.moq),
     quantity: Number(p.quantity),
+    images: p.images || [],
   }));
 
   return <HomeContent products={serializedProducts} />;

@@ -20,9 +20,14 @@ export default function AdminLogin() {
         });
 
         if (res.ok) {
+            const data = await res.json();
+            if (data.csrfToken) {
+                sessionStorage.setItem('csrf-token', data.csrfToken);
+            }
             router.push('/admin/dashboard');
         } else {
-            setError('Invalid email or password');
+            const data = await res.json();
+            setError(data.error || 'Invalid email or password');
         }
     };
 

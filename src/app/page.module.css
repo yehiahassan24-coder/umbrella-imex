@@ -1,65 +1,92 @@
+/* Page Styles - Modern & Clean */
+
+/* Hero Section */
 .hero {
   position: relative;
-  background-image: linear-gradient(rgba(31, 61, 43, 0.7), rgba(31, 61, 43, 0.5)), url('/images/hero-bg.png');
+  background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.85), rgba(40, 167, 69, 0.4)), url('/images/hero-bg-new.png');
   background-size: cover;
   background-position: center;
-  height: 90vh;
+  height: 85vh;
+  min-height: 600px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: white;
   padding: 0 20px;
+  overflow: hidden;
 }
 
 .heroContent {
   max-width: 900px;
-  animation: fadeIn 1s ease-out;
+  z-index: 2;
+  animation: fadeUp 1s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .hero h1 {
-  font-size: 3.5rem;
+  font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 800;
   margin-bottom: 1.5rem;
   color: white;
-  line-height: 1.2;
+  line-height: 1.1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .hero p {
-  font-size: 1.25rem;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
   margin-bottom: 2.5rem;
   font-weight: 400;
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
-  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+}
+
+/* Features Section */
+.featuresSection {
+  padding: 6rem 0;
+  background: white;
 }
 
 .sectionTitle {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
   font-size: 2.5rem;
+  color: var(--color-dark-green);
+  position: relative;
 }
 
-.card {
+.sectionTitle::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--color-primary-green);
+  margin: 1rem auto 0;
+  border-radius: 2px;
+}
+
+.featureCard {
   background: white;
   padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
   text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+  height: 100%;
 }
 
-.card:hover {
+.featureCard:hover {
   transform: translateY(-8px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-secondary-green);
 }
 
-.cardIcon {
-  color: var(--color-gold);
+.featureIcon {
+  color: var(--color-primary-green);
   margin-bottom: 1.5rem;
-  background: rgba(201, 162, 77, 0.1);
+  background: var(--color-secondary-green);
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -68,6 +95,40 @@
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
+  transition: transform 0.3s ease;
+}
+
+.featureCard:hover .featureIcon {
+  transform: scale(1.1);
+  background: var(--color-primary-green);
+  color: white;
+}
+
+/* About Section */
+.aboutSection {
+  padding: 6rem 0;
+  background: var(--color-soft-white);
+}
+
+.aboutGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.aboutImage {
+  position: relative;
+  height: 400px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Product Showcase */
+.productSection {
+  padding: 6rem 0;
+  background: white;
 }
 
 .productGrid {
@@ -76,61 +137,87 @@
   gap: 2rem;
 }
 
-.productCard {
+/* Testimonials */
+.testimonialSection {
+  padding: 6rem 0;
+  background: #f8fafc;
+}
+
+.testimonialGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.testimonialCard {
   background: white;
+  padding: 2.5rem;
   border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
   position: relative;
-  border: 1px solid #f0f0f0;
 }
 
-.productCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+.quoteIcon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: var(--color-secondary-green);
+  opacity: 0.5;
 }
 
-.productImg {
-  height: 220px;
-  background-color: #eee;
-  background-size: cover;
-  background-position: center;
-}
-
-.productInfo {
-  padding: 1.5rem;
-}
-
-.productInfo h3 {
-  margin-bottom: 0.5rem;
-  color: var(--color-charcoal-gray);
-}
-
-.productMeta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 1rem;
-}
-
-.ctaSection {
-  background-color: var(--color-forest-green);
+/* CTA Banner */
+.ctaBanner {
+  background: linear-gradient(90deg, var(--color-dark-green), #2a704a);
   color: white;
   text-align: center;
-  padding: 6rem 0;
+  padding: 5rem 0;
 }
 
-.ctaSection h2 {
+.ctaBanner h2 {
   color: white;
+  font-size: 2.5rem;
   margin-bottom: 1.5rem;
 }
 
-@keyframes fadeIn {
+/* Contact Preview */
+.inquirySection {
+  padding: 6rem 0;
+  background: var(--color-secondary-green);
+}
+
+.inquiryCard {
+  background: white;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(40, 167, 69, 0.1);
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary-green);
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+/* Animations */
+@keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
 
   to {
@@ -140,7 +227,15 @@
 }
 
 @media (max-width: 768px) {
-  .hero h1 {
-    font-size: 2.5rem;
+  .aboutGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+  }
+
+  .inquiryCard {
+    padding: 2rem;
   }
 }

@@ -1,147 +1,147 @@
 "use client";
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
 import styles from '../../dashboard.module.css';
-import { Mail, Shield, Lock, Save, ArrowLeft, ToggleLeft, ToggleRight } from 'lucide-react';
 import { useToast } from '../../components/ToastContext';
-import Link from 'next/link';
+import { Save, X, Loader2, Shield, User, ShieldCheck } from 'lucide-react';
+import { authFetch } from '@/lib/api';
 
-interface UserFormProps {
-    initialData?: {
-        id: string;
-        email: string;
-        role: string;
-        isActive: boolean;
-    };
-    isEdit?: boolean;
+interface UserData {
+    id?: string;
+    email: string;
+    role: string;
+    isActive: boolean;
+    password?: string;
 }
 
-export default function UserForm({ initialData, isEdit = false }: UserFormProps) {
-    const router = useRouter();
+interface Props {
+    user?: UserData;
+    onClose: () => void;
+    onSuccess: () => void;
+}
+
+export default function UserForm({ user, onClose, onSuccess }: Props) {
     const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        email: initialData?.email || '',
+    const [formData, setFormData] = useState<UserData>({
+        email: user?.email || '',
+        role: user?.role || 'EDITOR',
+        isActive: user?.isActive ?? true,
         password: '',
-        role: initialData?.role || 'EDITOR',
-        isActive: initialData?.isActive !== undefined ? initialData.isActive : true
     });
+
+    const isEdit = !!user;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
+        // Validation
+        if (!isEdit && !formData.password) {
+            showToast('Password is required for new users', 'error');
+            setLoading(false);
+            return;
+        }
+
         try {
             const url = '/api/users';
             const method = isEdit ? 'PUT' : 'POST';
-            const body = isEdit ? { id: initialData?.id, ...formData } : formData;
+            const payload = isEdit ? { ...formData, id: user.id } : formData;
 
-            const res = await fetch(url, {
+            const res = await authFetch(url, {
                 method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body),
+                body: JSON.stringify(payload),
             });
 
             const data = await res.json();
 
             if (res.ok) {
-                showToast(isEdit ? 'User updated successfully' : 'User created successfully', 'success');
-                router.push('/admin/dashboard/users');
-                router.refresh();
+                showToast(isEdit ? 'User updated' : 'User created', 'success');
+                onSuccess();
             } else {
-                showToast(data.error || 'Something went wrong', 'error');
+                showToast(data.error || 'Operation failed', 'error');
             }
-        } catch (error) {
-            showToast('Connection error', 'error');
+        } catch {
+            showToast('Network error', 'error');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className={styles.productForm}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <Link href="/admin/dashboard/users" className={styles.backBtn} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', textDecoration: 'none' }}>
-                    <ArrowLeft size={18} /> Back to Users
-                </Link>
-                <button type="submit" className="btn btn-primary" disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Save size={18} /> {loading ? 'Saving...' : (isEdit ? 'Update User' : 'Create User')}
-                </button>
-            </div>
+        <div className={styles.modalOverlay}>
+            <div className={styles.detailsPanel} style={{ maxWidth: '500px' }}>
+                <div className={styles.panelHeader}>
+                    <h3>{isEdit ? 'Edit User' : 'Add New User'}</h3>
+                    <button onClick={onClose} className={styles.closeBtn}><X size={20} /></button>
+                </div>
 
-            <div className={styles.formGrid}>
-                {/* Credentials Section */}
-                <div className={styles.card}>
-                    <h3 style={{ marginTop: 0, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <Mail size={20} color="var(--color-gold)" /> Account Credentials
-                    </h3>
-
+                <form onSubmit={handleSubmit} className={styles.panelContent}>
                     <div className={styles.formGroup}>
                         <label>Email Address</label>
                         <input
                             type="email"
-                            required
+                            className={styles.input}
                             value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            placeholder="admin@umbrella.com"
+                            onChange={e => setFormData({ ...formData, email: e.target.value })}
+                            required
                         />
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label>{isEdit ? 'New Password (Leave blank to keep current)' : 'Password'}</label>
+                        <label>Password {isEdit && '(Leave blank to keep unchanged)'}</label>
                         <input
                             type="password"
+                            className={styles.input}
+                            value={formData.password || ''}
+                            onChange={e => setFormData({ ...formData, password: e.target.value })}
                             required={!isEdit}
-                            value={formData.password}
-                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                            placeholder="••••••••"
+                            placeholder={isEdit ? '••••••••' : 'Secret password'}
                         />
                     </div>
-                </div>
 
-                {/* Permissions & Status Section */}
-                <div className={styles.card}>
-                    <h3 style={{ marginTop: 0, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <Shield size={20} color="var(--color-gold)" /> Permissions & Status
-                    </h3>
+                    <div className={styles.formGrid}>
+                        <div className={styles.formGroup}>
+                            <label>Role</label>
+                            <select
+                                className={styles.select}
+                                value={formData.role}
+                                onChange={e => setFormData({ ...formData, role: e.target.value })}
+                            >
+                                <option value="SUPER_ADMIN">Super Admin</option>
+                                <option value="ADMIN">Admin</option>
+                                <option value="EDITOR">Editor</option>
+                            </select>
+                            <p style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                {formData.role === 'SUPER_ADMIN' && <><ShieldCheck size={14} color="#854d0e" /> Full Access to entire system</>}
+                                {formData.role === 'ADMIN' && <><Shield size={14} color="#166534" /> Manage products, inquiries, settings</>}
+                                {formData.role === 'EDITOR' && <><User size={14} color="#475569" /> Can manage content only</>}
+                            </p>
+                        </div>
 
-                    <div className={styles.formGroup}>
-                        <label>System Role</label>
-                        <select
-                            value={formData.role}
-                            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                        >
-                            <option value="SUPER_ADMIN">Super Administrator (Full Access)</option>
-                            <option value="ADMIN">Administrator (Stock & Inquiries)</option>
-                            <option value="EDITOR">Editor (Stock Management Only)</option>
-                        </select>
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <label>Account Status</label>
-                        <div
-                            className={styles.toggleContainer}
-                            onClick={() => setFormData({ ...formData, isActive: !formData.isActive })}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '12px',
-                                cursor: 'pointer',
-                                background: '#f8fafc',
-                                padding: '1rem',
-                                borderRadius: '8px',
-                                border: '1px solid #e2e8f0'
-                            }}
-                        >
-                            {formData.isActive ? <ToggleRight size={32} color="var(--color-success)" /> : <ToggleLeft size={32} color="#94a3b8" />}
-                            <div>
-                                <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{formData.isActive ? 'Active' : 'Disabled'}</div>
-                                <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{formData.isActive ? 'User can log in and perform actions.' : 'User is blocked from logging in.'}</div>
-                            </div>
+                        <div className={styles.formGroup}>
+                            <label>Status</label>
+                            <label className={styles.toggleTile} style={{ padding: '0.6rem' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={formData.isActive}
+                                    onChange={e => setFormData({ ...formData, isActive: e.target.checked })}
+                                />
+                                <span style={{ fontWeight: 500 }}>
+                                    {formData.isActive ? 'Active Account' : 'Account Disabled'}
+                                </span>
+                            </label>
                         </div>
                     </div>
-                </div>
+
+                    <div className={styles.panelActions} style={{ marginTop: '1rem' }}>
+                        <button type="button" onClick={onClose} className="btn" style={{ border: '1px solid #e2e8f0', background: 'white' }}>Cancel</button>
+                        <button type="submit" className="btn btn-primary" disabled={loading}>
+                            {loading ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
+                            {isEdit ? 'Save Changes' : 'Create User'}
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     );
 }

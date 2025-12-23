@@ -16,7 +16,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const saved = localStorage.getItem('umbrella-lang') as Language;
         if (saved && (saved === 'en' || saved === 'fr')) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setLanguage(saved);
         }
     }, []);
@@ -28,7 +27,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
     const t = (path: string) => {
         const keys = path.split('.');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let current: any = translations[language];
         for (const key of keys) {
             if (current[key] === undefined) return path;

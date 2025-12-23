@@ -8,14 +8,24 @@ const prisma = new PrismaClient();
 
 async function createAdmin() {
     try {
-        // Get credentials from command line or use defaults
+        // Get credentials and role from command line
         const email = process.argv[2];
         const password = process.argv[3];
+        const inputRole = process.argv[4]; // Optional
 
         // Validation
         if (!email || !password) {
-            console.error('❌ Usage: node scripts/create-admin.js <email> <password>');
-            console.error('Example: node scripts/create-admin.js admin@umbrella.com MyStrongPass123!');
+            console.error('❌ Usage: node scripts/create-admin.js <email> <password> [role]');
+            console.error('Example: node scripts/create-admin.js admin@umbrella.com MyPass123! ADMIN');
+            process.exit(1);
+        }
+
+        // Role validation
+        const validRoles = ['SUPER_ADMIN', 'ADMIN', 'EDITOR', 'USER'];
+        const role = inputRole ? inputRole.toUpperCase() : 'SUPER_ADMIN';
+
+        if (!validRoles.includes(role)) {
+            console.error(`❌ Invalid role. Must be one of: ${validRoles.join(', ')}`);
             process.exit(1);
         }
 
@@ -32,7 +42,7 @@ async function createAdmin() {
             process.exit(1);
         }
 
-        console.log('🔄 Creating admin account...');
+        console.log(`🔄 Creating user with role ${role}...`);
 
         // Check if user already exists
         const existing = await prisma.user.findUnique({
@@ -48,12 +58,12 @@ async function createAdmin() {
         console.log('🔐 Hashing password...');
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create admin user
+        // Create user
         const admin = await prisma.user.create({
             data: {
                 email,
                 password: hashedPassword,
-                role: 'SUPER_ADMIN',
+                role: role,
                 isActive: true
             }
         });

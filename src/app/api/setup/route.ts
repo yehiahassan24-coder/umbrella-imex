@@ -47,7 +47,8 @@ export async function GET() {
                     price: 2.50,
                     moq: 1000,
                     quantity: 5000,
-                    is_active: true
+                    is_active: true,
+                    slug: 'premium-red-apples'
                 },
                 {
                     name_en: 'Organic Carrots',
@@ -60,7 +61,8 @@ export async function GET() {
                     price: 0.80,
                     moq: 500,
                     quantity: 10000,
-                    is_active: true
+                    is_active: true,
+                    slug: 'organic-carrots'
                 }
             ]
         });

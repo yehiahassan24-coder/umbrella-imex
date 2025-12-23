@@ -78,6 +78,7 @@ export async function PUT(req: Request) {
         if (email) updateData.email = email;
         if (password && password.trim() !== "") {
             updateData.password = await bcrypt.hash(password, 10);
+            updateData.tokenVersion = { increment: 1 };
         }
 
         const user = await prisma.user.update({

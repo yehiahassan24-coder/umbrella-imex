@@ -1,15 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { verifyJWT } from '@/lib/auth';
-import { cookies } from 'next/headers';
-
-async function checkAuth() {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('admin-token')?.value;
-    if (!token) return false;
-    const payload = await verifyJWT(token);
-    return !!payload;
-}
+import { requirePermission } from '@/lib/permissions';
 
 export async function GET() {
     try {
@@ -24,10 +15,17 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-    if (!await checkAuth()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
     try {
+        const session = await requirePermission(request, 'CREATE_PRODUCT');
         const body = await request.json();
+
+        // Basic slug generation if not provided
+        let slug = body.slug;
+        if (!slug && body.name_en) {
+            slug = body.name_en.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        }
+        if (!slug) slug = `product-${Date.now()}`;
+
         const product = await prisma.product.create({
             data: {
                 name_en: body.name_en,
@@ -40,12 +38,24 @@ export async function POST(request: Request) {
                 moq: parseInt(body.moq) || 0,
                 price: parseFloat(body.price) || 0,
                 quantity: parseInt(body.quantity) || 0,
-                is_active: body.is_active ?? true
+                is_active: body.is_active ?? true,
+
+                // New Fields
+                images: body.images || [],
+                slug: slug,
+                sku: body.sku || null,
+                tags: body.tags || [],
+                seoTitle: body.seoTitle || null,
+                seoDesc: body.seoDesc || null,
+                isFeatured: body.isFeatured || false
             }
         });
         return NextResponse.json(product);
-    } catch (error) {
+    } catch (error: any) {
         console.error("Create Product Error:", error);
+        if (error.code === 'P2002') {
+            return NextResponse.json({ error: 'Product with this slug or SKU already exists' }, { status: 409 });
+        }
         return NextResponse.json({ error: 'Failed to create product' }, { status: 500 });
     }
 }

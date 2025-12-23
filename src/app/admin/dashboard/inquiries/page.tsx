@@ -39,14 +39,7 @@ export default async function InquiriesPage() {
             />
 
             <div className={styles.card}>
-                {inquiries.length > 0 ? (
-                    <InquiriesTable inquiries={serializedInquiries} role={role} />
-                ) : (
-                    <div style={{ textAlign: 'center', padding: '4rem', color: '#94a3b8' }}>
-                        <p style={{ fontSize: '1.125rem' }}>No inquiries yet.</p>
-                        <p style={{ fontSize: '0.875rem' }}>Incoming messages from the contact forms will appear here.</p>
-                    </div>
-                )}
+                <InquiriesTable inquiries={serializedInquiries} role={role} />
             </div>
         </div>
     );

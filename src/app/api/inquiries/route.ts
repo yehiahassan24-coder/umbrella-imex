@@ -1,15 +1,42 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendAdminNotification, sendCustomerAutoReply } from '@/lib/mail';
+import { rateLimit } from '@/lib/ratelimit';
+import { headers } from 'next/headers';
 
 export async function POST(request: Request) {
     try {
+        // --- Rate Limiting ---
+        const ip = (await headers()).get('x-forwarded-for') || '127.0.0.1';
+        const limitResult = await rateLimit(`inquiry:${ip}`, 10, 60);
+
+        if (!limitResult.success) {
+            return NextResponse.json({
+                error: 'Too many inquiries. Please wait a moment before sending another.'
+            }, { status: 429 });
+        }
+
         const body = await request.json();
         const lang = body.lang || 'en';
 
-        // Basic validation
+        // Basic size protection
+        if (JSON.stringify(body).length > 10000) {
+            return NextResponse.json({ error: 'Payload too large' }, { status: 413 });
+        }
+
+        // Field validation
         if (!body.name || !body.email || !body.message) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+        }
+
+        if (body.name.length > 100 || body.email.length > 100 || body.message.length > 5000) {
+            return NextResponse.json({ error: 'Input too long' }, { status: 400 });
+        }
+
+        // Email format check
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(body.email)) {
+            return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
         }
 
         // Fetch product name if productId is provided for the email

@@ -17,5 +17,5 @@ export default async function EditProductPage({ params }: Props) {
         notFound();
     }
 
-    return <ProductForm isEdit initialData={product} />;
+    return <ProductForm isEdit initialData={product as any} />;
 }

@@ -1,6 +1,4 @@
-import React from 'react';
-import { cookies } from 'next/headers';
-import { verifyJWT } from '@/lib/auth';
+import { getAuthUser } from '@/lib/user';
 import DashboardShell from './components/DashboardShell';
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
@@ -19,20 +17,14 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('admin-token')?.value;
+    const user = await getAuthUser();
 
-    if (!token) {
-        redirect('/admin');
-    }
-
-    const payload = await verifyJWT(token);
-    if (!payload) {
+    if (!user) {
         redirect('/admin');
     }
 
     return (
-        <DashboardShell email={payload.email as string} role={payload.role as string}>
+        <DashboardShell email={user.email} role={user.role}>
             {children}
         </DashboardShell>
     );

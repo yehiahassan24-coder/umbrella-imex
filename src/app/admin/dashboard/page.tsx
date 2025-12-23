@@ -18,7 +18,7 @@ export default async function DashboardOverview() {
     const payload = token ? await verifyJWT(token) : null;
     const role = (payload?.role as string) || '';
 
-    const [recentInquiries, recentLogs] = await Promise.all([
+    const [recentInquiries, recentLogs, usersCount] = await Promise.all([
         prisma.inquiry.findMany({
             take: 5,
             orderBy: { createdAt: 'desc' },
@@ -27,7 +27,8 @@ export default async function DashboardOverview() {
         role === 'SUPER_ADMIN' ? prisma.auditLog.findMany({
             take: 5,
             orderBy: { createdAt: 'desc' }
-        }) : Promise.resolve([])
+        }) : Promise.resolve([]),
+        role === 'SUPER_ADMIN' ? prisma.user.count({ where: { isActive: true } }) : Promise.resolve(0)
     ]);
 
     const stats = [
@@ -36,6 +37,10 @@ export default async function DashboardOverview() {
         { label: 'Total Inquiries', value: data.kpis.totalInquiries, icon: MessageSquare, color: '#92400e', bg: '#fffbeb' },
         { label: 'New (7 Days)', value: data.kpis.newInquiries, icon: Clock, color: '#991b1b', bg: '#fef2f2' },
     ];
+
+    if (role === 'SUPER_ADMIN') {
+        stats.push({ label: 'Active Users', value: usersCount, icon: ShieldCheck, color: '#7e22ce', bg: '#f3e8ff' });
+    }
 
     return (
         <div className={styles.dashboardPage}>

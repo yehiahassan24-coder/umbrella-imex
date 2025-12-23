@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import styles from '../dashboard.module.css';
@@ -19,6 +19,7 @@ import {
     Moon
 } from 'lucide-react';
 import { ToastProvider } from './ToastContext';
+import { authFetch } from '@/lib/api';
 
 interface DashboardShellProps {
     children: React.ReactNode;
@@ -29,6 +30,16 @@ interface DashboardShellProps {
 export default function DashboardShell({ children, email, role }: DashboardShellProps) {
     const pathname = usePathname();
     const router = useRouter();
+
+    const handleLogout = useCallback(async () => {
+        try {
+            await authFetch('/api/auth/logout', { method: 'POST' });
+        } catch (e) {
+            console.error('Logout failed', e);
+        }
+        sessionStorage.removeItem('csrf-token');
+        router.push('/admin');
+    }, [router]);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
@@ -46,7 +57,32 @@ export default function DashboardShell({ children, email, role }: DashboardShell
             setTheme(savedTheme);
             document.documentElement.setAttribute('data-theme', savedTheme);
         }
-    }, []);
+
+        // --- Idle Timeout (30 Minutes) ---
+        let timeoutId: NodeJS.Timeout;
+
+        const resetTimer = () => {
+            if (timeoutId) clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                handleLogout();
+                alert('Session expired due to inactivity. Please log in again.');
+            }, 30 * 60 * 1000); // 30 mins
+        };
+
+        const activityEvents = ['mousemove', 'keydown', 'mousedown', 'touchstart'];
+        activityEvents.forEach(event => {
+            window.addEventListener(event, resetTimer);
+        });
+
+        resetTimer();
+
+        return () => {
+            if (timeoutId) clearTimeout(timeoutId);
+            activityEvents.forEach(event => {
+                window.removeEventListener(event, resetTimer);
+            });
+        };
+    }, [handleLogout]);
 
     const toggleTheme = () => {
         const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -72,11 +108,6 @@ export default function DashboardShell({ children, email, role }: DashboardShell
         links.push({ href: '/admin/dashboard/logs', label: 'Activity', icon: History });
     }
 
-    const handleLogout = async () => {
-        await fetch('/api/auth/logout', { method: 'POST' });
-        router.push('/admin');
-    };
-
     if (!isMounted) return null;
 
     return (
@@ -87,9 +118,14 @@ export default function DashboardShell({ children, email, role }: DashboardShell
                     <div style={{ display: 'flex', gap: '10px', alignItems: 'center', fontWeight: 'bold' }}>
                         <ShoppingBag size={20} /> Admin
                     </div>
-                    <button onClick={() => setMobileOpen(!mobileOpen)} className={styles.menuBtn}>
-                        {mobileOpen ? <X /> : <Menu />}
-                    </button>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <button onClick={handleLogout} className={styles.menuBtn} title="Logout">
+                            <LogOut size={20} />
+                        </button>
+                        <button onClick={() => setMobileOpen(!mobileOpen)} className={styles.menuBtn}>
+                            {mobileOpen ? <X /> : <Menu />}
+                        </button>
+                    </div>
                 </div>
 
                 <aside className={`${styles.sidebar} ${isCollapsed ? styles.collapsedSidebar : ''} ${mobileOpen ? styles.mobileOpen : ''}`}>
@@ -155,6 +191,27 @@ export default function DashboardShell({ children, email, role }: DashboardShell
                 </aside>
 
                 <main className={styles.main}>
+                    <div className={styles.desktopUserBar}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <span style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+                                Logged in as <b style={{ color: 'var(--color-text-main)' }}>{email}</b>
+                            </span>
+                            <button
+                                onClick={handleLogout}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '6px',
+                                    padding: '6px 12px', borderRadius: '6px',
+                                    border: '1px solid var(--color-border)',
+                                    background: 'var(--color-bg-primary)',
+                                    cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500,
+                                    color: 'var(--color-text-main)'
+                                }}
+                                title="Sign Out"
+                            >
+                                <LogOut size={14} /> Sign Out
+                            </button>
+                        </div>
+                    </div>
                     {children}
                 </main>
             </div>

@@ -1,12 +1,19 @@
 @import '../styles/tokens.css';
 
 :root {
-  --background: #F7F9F8;
+  --background: #FFFFFF;
   --foreground: #2E2E2E;
 
-  --color-forest-green: #1F3D2B;
+  /* Brand Colors - New Scheme */
+  --color-primary-green: #28A745;
+  --color-primary-hover: #218838;
+  --color-secondary-green: #E6F4EA;
+  --color-dark-green: #1E5B3A;
+
+  /* Legacy/Support Colors (Mapping to new scheme where appropriate) */
+  --color-forest-green: #1E5B3A;
   --color-gold: #C9A24D;
-  --color-soft-white: #F7F9F8;
+  --color-soft-white: #F8F9FA;
   --color-charcoal-gray: #2E2E2E;
 
   --color-white: #FFFFFF;
@@ -47,7 +54,7 @@ h5,
 h6 {
   margin: 0 0 1rem 0;
   font-weight: 700;
-  color: var(--color-forest-green);
+  color: var(--color-dark-green);
 }
 
 p {
@@ -60,74 +67,53 @@ button {
   border: none;
 }
 
+/* Components - Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+}
+
+.btn-primary {
+  background-color: var(--color-primary-green);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 2px solid var(--color-primary-green);
+  color: var(--color-primary-green);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-primary-green);
+  color: white;
+}
+
 /* Utilities */
-.text-gold {
-  color: var(--color-gold);
-}
-
 .text-green {
-  color: var(--color-forest-green);
+  color: var(--color-primary-green);
 }
 
-.bg-green {
-  background-color: var(--color-forest-green);
-  color: white;
-}
-
-.bg-gold {
-  background-color: var(--color-gold);
-  color: white;
+.bg-light-green {
+  background-color: var(--color-secondary-green);
 }
 
 .text-center {
   text-align: center;
 }
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 30px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 0.9rem;
-}
-
-.btn-primary {
-  background-color: var(--color-gold);
-  color: var(--color-forest-green);
-}
-
-.btn-primary:hover {
-  background-color: #e0b85a;
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  border: 2px solid var(--color-white);
-  color: white;
-}
-
-.btn-secondary:hover {
-  background-color: white;
-  color: var(--color-forest-green);
-}
-
-.btn-outline {
-  background-color: transparent;
-  border: 2px solid var(--color-forest-green);
-  color: var(--color-forest-green);
-}
-
-.btn-outline:hover {
-  background-color: var(--color-forest-green);
-  color: var(--color-gold);
-}
-
 
 /* Grid layout helpers */
 .grid {

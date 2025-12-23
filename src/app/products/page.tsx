@@ -27,7 +27,7 @@ export default async function ProductsPage() {
         season: p.season,
         moq: Number(p.moq),
         quantity: Number(p.quantity),
-        // createdAt is not in Product interface
+        images: p.images || [],
     }));
 
     return <ProductList products={products} />;

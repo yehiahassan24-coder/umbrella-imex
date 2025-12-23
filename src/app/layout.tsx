@@ -4,12 +4,16 @@ import "./globals.css";
 import { LanguageProvider } from "@/lib/LanguageContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Umbrella Import & Export",
   description: "Premium bilingual agricultural import & export company.",
+  icons: {
+    icon: '/favicon-new.svg',
+  }
 };
 
 export default function RootLayout({
@@ -26,6 +30,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <ScrollToTop />
         </LanguageProvider>
       </body>
     </html>
