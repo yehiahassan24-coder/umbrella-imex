@@ -81,6 +81,7 @@ export default function ProductForm({ initialData, isEdit = false }: Props) {
 
     const [tagInput, setTagInput] = useState(initialData?.tags?.join(', ') || '');
     const [touchedSlug, setTouchedSlug] = useState(!!initialData?.slug);
+    const [urlInput, setUrlInput] = useState('');
 
     useEffect(() => {
         if (!isEdit) {
@@ -160,6 +161,12 @@ export default function ProductForm({ initialData, isEdit = false }: Props) {
         const newImages: string[] = [];
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
+
+            if (file.size > 1024 * 1024) {
+                showToast(`File ${file.name} exceeds 1MB limit`, 'error');
+                continue;
+            }
+
             const data = new FormData();
             data.append('file', file);
             try {
@@ -168,7 +175,8 @@ export default function ProductForm({ initialData, isEdit = false }: Props) {
                     const json = await res.json();
                     newImages.push(json.url);
                 } else {
-                    showToast(`Failed to upload ${file.name}`, 'error');
+                    const err = await res.json();
+                    showToast(err.error || `Failed to upload ${file.name}`, 'error');
                 }
             } catch (err) {
                 console.error(err);
@@ -177,6 +185,16 @@ export default function ProductForm({ initialData, isEdit = false }: Props) {
         }
         setFormData(prev => ({ ...prev, images: [...prev.images, ...newImages] }));
         setUploading(false);
+    };
+
+    const handleAddUrl = () => {
+        if (!urlInput) return;
+        if (!urlInput.startsWith('http')) {
+            showToast('Please enter a valid URL', 'error');
+            return;
+        }
+        setFormData(prev => ({ ...prev, images: [...prev.images, urlInput] }));
+        setUrlInput('');
     };
 
     const removeImage = (index: number) => {
@@ -354,6 +372,25 @@ export default function ProductForm({ initialData, isEdit = false }: Props) {
                                 </p>
                                 <p style={{ margin: 0, fontSize: '0.8rem', color: '#94a3b8' }}>SVG, PNG, JPG or GIF (max. 5MB)</p>
                             </div>
+                        </div>
+
+                        {/* Add via URL */}
+                        <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
+                            <input
+                                className={styles.input}
+                                placeholder="Or parse image URL (https://...)"
+                                value={urlInput}
+                                onChange={(e) => setUrlInput(e.target.value)}
+                                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddUrl(); } }}
+                            />
+                            <button
+                                type="button"
+                                onClick={handleAddUrl}
+                                className="btn btn-secondary"
+                                style={{ whiteSpace: 'nowrap' }}
+                            >
+                                Add URL
+                            </button>
                         </div>
 
                         {/* Image Preview List */}

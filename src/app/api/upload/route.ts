@@ -20,9 +20,9 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        // 2. Size Validation (3MB limit for Base64 safety)
-        if (file.size > 3 * 1024 * 1024) {
-            return NextResponse.json({ error: 'File too large (Max 3MB)' }, { status: 413 });
+        // 2. Size Validation (1MB limit for Base64 safety)
+        if (file.size > 1 * 1024 * 1024) {
+            return NextResponse.json({ error: 'File too large (Max 1MB). For larger images, use an external URL.' }, { status: 413 });
         }
 
         // 3. MIME Type Validation
