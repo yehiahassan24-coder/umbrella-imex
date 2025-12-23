@@ -45,7 +45,7 @@ export function HowItWorks() {
 
 export function GlobalReach() {
     return (
-        <section className={`${styles.section} ${styles.bgGray}`}>
+        <section className={`${styles.section} ${styles.bgLight}`}>
             <div className="container">
                 <div className={styles.mapContent}>
                     <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: '#1e5b3a' }}>Serving Global Markets</h2>
@@ -73,7 +73,7 @@ export function GlobalReach() {
                         src="/images/global-map.png"
                         alt="Global Export Map"
                         fill
-                        style={{ objectFit: 'cover' }}
+                        style={{ objectFit: 'contain' }}
                     />
                 </div>
             </div>
