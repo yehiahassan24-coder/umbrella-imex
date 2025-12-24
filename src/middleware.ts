@@ -40,13 +40,11 @@ export async function middleware(request: NextRequest) {
     // 2. If hitting any dashboard route (/admin/dashboard/...)
     if (pathname.startsWith('/admin/dashboard')) {
         if (!token) {
-            console.log('Middleware: No token found, redirecting to /admin');
             return NextResponse.redirect(new URL('/admin', request.url));
         }
 
         const payload = await verifyJWT(token);
         if (!payload) {
-            console.log('Middleware: Token verification failed, clearing cookies and redirecting');
             const response = NextResponse.redirect(new URL('/admin', request.url));
             response.cookies.delete('admin-token');
             response.cookies.delete('is-authenticated');

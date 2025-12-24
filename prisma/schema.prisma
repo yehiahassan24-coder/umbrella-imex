@@ -1,11 +1,85 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String     @id @default(uuid())
+  email               String     @unique
+  password            String
+  role                Role       @default(ADMIN)
+  isActive            Boolean    @default(true)
+  failedLoginAttempts Int        @default(0)
+  lockedUntil         DateTime?
+  tokenVersion        Int        @default(0)
+  lastLogin           DateTime?
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  logs                AuditLog[]
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String
+  entity    String
+  entityId  String?
+  details   String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Product {
+  id         String    @id @default(uuid())
+  name_en    String
+  name_fr    String
+  desc_en    String
+  desc_fr    String
+  category   String
+  origin     String
+  season     String
+  price      Float
+  moq        Int
+  quantity   Int
+  images     String[]
+  slug       String    @unique
+  sku        String?   @unique
+  tags       String[]
+  seoTitle   String?
+  seoDesc    String?
+  isFeatured Boolean   @default(false)
+  is_active  Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  inquiries  Inquiry[]
+}
+
+model Inquiry {
+  id         String          @id @default(uuid())
+  productId  String?
+  name       String
+  email      String
+  phone      String
+  message    String
+  is_read    Boolean         @default(false)
+  status     InquiryStatus   @default(NEW)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  assignedTo String?
+  notes      String?
+  priority   InquiryPriority @default(MEDIUM)
+  tags       String[]
+  product    Product?        @relation(fields: [productId], references: [id])
+}
+
+model RateLimit {
+  key     String   @id
+  count   Int      @default(0)
+  resetAt DateTime
 }
 
 enum Role {
@@ -22,92 +96,9 @@ enum InquiryStatus {
   LOST
 }
 
-// Phase 2 Upgrade: Inquiry Prioritization
 enum InquiryPriority {
-    LOW
-    MEDIUM
-    HIGH
-    URGENT
-}
-
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  role      Role     @default(ADMIN)
-  isActive            Boolean   @default(true)
-  failedLoginAttempts Int       @default(0)
-  lockedUntil         DateTime?
-  tokenVersion        Int       @default(0)
-  lastLogin           DateTime?
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-  
-  logs      AuditLog[]
-}
-
-model AuditLog {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  action    String
-  entity    String
-  entityId  String?
-  details   String?
-  createdAt DateTime @default(now())
-}
-
-model Product {
-  id          String   @id @default(uuid())
-  name_en     String
-  name_fr     String
-  desc_en     String
-  desc_fr     String
-  category    String
-  origin      String
-  season      String
-  price       Float
-  moq         Int
-  quantity    Int
-
-  // Enhanced Fields
-  images      String[]
-  slug        String   @unique
-  sku         String?  @unique
-  tags        String[]
-  seoTitle    String?
-  seoDesc     String?
-  isFeatured  Boolean  @default(false)
-  
-  is_active   Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  
-  inquiries   Inquiry[]
-}
-
-model Inquiry {
-  id        String        @id @default(uuid())
-  productId String?
-  product   Product?      @relation(fields: [productId], references: [id])
-  name      String
-  email     String
-  phone     String
-  message   String
-  is_read   Boolean       @default(false)
-  status    InquiryStatus @default(NEW)
-  
-  // Phase 2 Upgrade: Sales Enablement Fields
-  priority  InquiryPriority @default(MEDIUM)
-  notes     String?        // Internal notes for sales team
-  tags      String[]       // e.g. ["Sample Request", "Wholesale", "Retail"]
-  assignedTo String?       // User ID of sales rep
-
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-}
-
-model RateLimit {
-  key       String   @id
-  count     Int      @default(0)
-  resetAt   DateTime
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }

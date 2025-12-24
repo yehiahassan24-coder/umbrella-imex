@@ -21,9 +21,8 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        // 2. Size Validation (1MB limit for Base64 safety)
-        if (file.size > 1 * 1024 * 1024) {
-            return NextResponse.json({ error: 'File too large (Max 1MB). For larger images, use an external URL.' }, { status: 413 });
+        if (file.size > 5 * 1024 * 1024) {
+            return NextResponse.json({ error: 'File too large (Max 5MB).' }, { status: 413 });
         }
 
         const bytes = await file.arrayBuffer();
@@ -49,17 +48,25 @@ export async function POST(request: Request) {
         const fileExtension = file.name.split('.').pop()?.toLowerCase() || 'bin';
         const uniqueName = `${crypto.randomUUID()}.${fileExtension}`;
 
-        // 5. check for cloud storage config
-        const hasCloudStorage = process.env.UPLOAD_STORAGE_TYPE === 's3' || process.env.BLOB_READ_WRITE_TOKEN;
+        const isProd = process.env.NODE_ENV === 'production';
+        const storageType = process.env.UPLOAD_STORAGE_TYPE;
+
+        // ❌ Remove Base64 Fallback & Enforce Cloud for Production
+        if (isProd && storageType !== 's3') {
+            return NextResponse.json({
+                error: 'Production storage misconfigured. Cloud storage (S3/R2) is required.'
+            }, { status: 500 });
+        }
 
         let fileUrl: string;
 
-        if (hasCloudStorage) {
+        if (storageType === 's3') {
+            fileUrl = await uploadFile(buffer, uniqueName, file.type);
+        } else if (!isProd) {
+            // Development Fallback: Local Storage
             fileUrl = await uploadFile(buffer, uniqueName, file.type);
         } else {
-            // Fallback: Return Base64 Data URI (Works in Vercel with no config)
-            const base64String = buffer.toString('base64');
-            fileUrl = `data:${file.type};base64,${base64String}`;
+            return NextResponse.json({ error: 'Unsupported storage configuration' }, { status: 500 });
         }
 
         return NextResponse.json({ url: fileUrl });

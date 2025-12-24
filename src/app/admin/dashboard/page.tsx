@@ -79,6 +79,8 @@ export default async function DashboardOverview() {
                 <DashboardCharts
                     chartData={data.charts.inquiriesTrend}
                     categoryData={data.charts.productsByCategory}
+                    funnelData={data.charts.conversionFunnel}
+                    slaData={data.charts.slaPerformance}
                 />
             </div>
 

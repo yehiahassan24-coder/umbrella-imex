@@ -15,7 +15,6 @@ export default function AdminLogin() {
     useEffect(() => {
         // Simple client-side check for a non-HTTPOnly cookie
         if (document.cookie.includes('is-authenticated=true')) {
-            console.log('Client: Already authenticated, redirecting to dashboard...');
             router.push('/admin/dashboard');
         }
     }, [router]);
@@ -28,7 +27,6 @@ export default function AdminLogin() {
 
         setError('');
         setIsLoading(true);
-        console.log('Client: Attempting login for:', email);
 
         try {
             const res = await fetch('/api/auth/login', {
@@ -40,15 +38,12 @@ export default function AdminLogin() {
             const data = await res.json();
 
             if (res.ok) {
-                console.log('Client: Login success. Redirecting to dashboard...');
                 // Use window.location.href for a clean state reload
                 window.location.href = '/admin/dashboard';
             } else {
-                console.error('Client: Login failed:', data.error);
                 setError(data.error || 'Invalid credentials');
             }
         } catch (err: any) {
-            console.error('Client: Network/System error during login:', err);
             setError('System error. Please try again or check your connection.');
         } finally {
             setIsLoading(false);

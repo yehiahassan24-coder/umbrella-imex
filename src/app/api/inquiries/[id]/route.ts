@@ -22,6 +22,14 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         const id = (await params).id;
         const body = await request.json();
 
+        // 🔍 Fetch original to check transitions
+        const original = await prisma.inquiry.findUnique({
+            where: { id },
+            select: { assignedTo: true, name: true, email: true, status: true }
+        } as any) as any;
+
+        if (!original) return NextResponse.json({ error: 'Inquiry not found' }, { status: 404 });
+
         // Allowed fields for update
         const data: any = {};
         if (body.is_read !== undefined) data.is_read = body.is_read;
@@ -34,7 +42,35 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         const inquiry = await prisma.inquiry.update({
             where: { id },
             data
-        });
+        }) as any;
+
+        // 📧 STRATEGY: Automated Notifications
+        (async () => {
+            try {
+                const { sendAssignmentNotification, sendStatusUpdateNotification } = await import('@/lib/mail');
+
+                // 1. Assignment Change
+                if (body.assignedTo && body.assignedTo !== original.assignedTo) {
+                    await sendAssignmentNotification(body.assignedTo, {
+                        id: inquiry.id,
+                        name: inquiry.name,
+                        customerEmail: inquiry.email
+                    });
+                }
+
+                // 2. Status Transition (External)
+                const statusChanged = body.status && body.status !== original.status;
+                if (statusChanged && ['QUOTED', 'WON'].includes(body.status)) {
+                    await sendStatusUpdateNotification(
+                        inquiry.email,
+                        inquiry.name,
+                        body.status
+                    );
+                }
+            } catch (e) {
+                console.error('Background Email Error:', e);
+            }
+        })();
 
         const actionDetail = body.status
             ? `Changed status to ${body.status}`

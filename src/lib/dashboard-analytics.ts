@@ -9,23 +9,32 @@ export async function getDashboardAnalytics() {
         totalProducts,
         activeProducts,
         totalInquiries,
-        newInquiries,
-        inquiriesTrend,
-        productsByCategory,
         highPriorityLeads,
         overdueInquiries,
+        inquiriesTrend,
+        productsByCategory,
+        inquiriesByStatus,
     ] = await Promise.all([
         prisma.product.count(),
         prisma.product.count({
-            where: { quantity: { gt: 0 } },
+            where: { is_active: true },
         }),
         prisma.inquiry.count(),
+
+        // 🚨 High Priority Leads (High + Urgent)
         prisma.inquiry.count({
-            where: { createdAt: { gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) } },
+            where: { priority: { in: ['HIGH', 'URGENT'] as any } } as any
+        }),
+
+        // ⚠️ Overdue (New + Older than 24h)
+        prisma.inquiry.count({
+            where: {
+                status: 'NEW',
+                createdAt: { lte: new Date(now.getTime() - 24 * 60 * 60 * 1000) }
+            }
         }),
 
         // 📈 Inquiries over time (last 14 days)
-        // Using Prisma findMany for better database portability, then grouping in JS
         prisma.inquiry.findMany({
             where: {
                 createdAt: { gte: last14Days },
@@ -45,16 +54,12 @@ export async function getDashboardAnalytics() {
                 id: true
             },
         }),
-        // 🚨 High Priority Leads (High + Urgent)
-        prisma.inquiry.count({
-            where: { priority: { in: ['HIGH', 'URGENT'] as any } }
-        }),
 
-        // ⚠️ Overdue (New + Older than 24h)
-        prisma.inquiry.count({
-            where: {
-                status: 'NEW',
-                createdAt: { lte: new Date(now.getTime() - 24 * 60 * 60 * 1000) }
+        // 📊 Conversion Funnel (Status breakdown)
+        prisma.inquiry.groupBy({
+            by: ["status"],
+            _count: {
+                id: true
             }
         }),
     ]);
@@ -82,6 +87,22 @@ export async function getDashboardAnalytics() {
         value: pc._count.id
     }));
 
+    // Process Status data for Funnel
+    const funnelData = inquiriesByStatus.map(is => ({
+        name: is.status,
+        value: is._count.id
+    }));
+
+    // SLA Performance (On-time vs Overdue)
+    const slaData = [
+        { name: 'On Time', value: totalInquiries - overdueInquiries },
+        { name: 'SLA Breach', value: overdueInquiries }
+    ];
+
+    // New inquiries in last 7 days
+    const last7DaysDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const newInquiries = inquiriesTrend.filter(inq => new Date(inq.createdAt) >= last7DaysDate).length;
+
     return {
         kpis: {
             totalProducts,
@@ -94,6 +115,8 @@ export async function getDashboardAnalytics() {
         charts: {
             inquiriesTrend: chartData,
             productsByCategory: categoryData,
+            conversionFunnel: funnelData,
+            slaPerformance: slaData,
         },
     };
 }

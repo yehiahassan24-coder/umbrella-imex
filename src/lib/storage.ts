@@ -23,7 +23,12 @@ const s3Client = storageType === 's3' ? new S3Client({
  * @param contentType The MIME type of the file
  */
 export async function uploadFile(buffer: Buffer, filename: string, contentType: string = 'image/jpeg'): Promise<string> {
+    const isProd = process.env.NODE_ENV === 'production';
+
     if (storageType === 'local') {
+        if (isProd) {
+            throw new Error('Local storage is disabled in production. Use S3/R2.');
+        }
         const uploadDir = join(process.cwd(), 'public/uploads');
         try {
             await mkdir(uploadDir, { recursive: true });

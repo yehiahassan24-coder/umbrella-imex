@@ -50,6 +50,11 @@ export async function POST(request: Request) {
                 isFeatured: body.isFeatured || false
             }
         });
+
+        // ✅ Audit Logging
+        const { createAuditLog } = await import('@/lib/audit');
+        await createAuditLog(session.user.id, 'CREATE', 'PRODUCT', product.id, `Created product ${product.name_en}`);
+
         return NextResponse.json(product);
     } catch (error: any) {
         console.error("Create Product Error:", error);

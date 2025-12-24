@@ -134,7 +134,6 @@ export async function POST(request: Request) {
             path: '/',
         });
 
-        console.log('Login successful, cookies set for user:', email);
         return response;
 
     } catch (error) {
