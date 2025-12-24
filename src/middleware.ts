@@ -23,56 +23,51 @@ export async function middleware(request: NextRequest) {
         }
     }
 
-    // --- DASHBOARD PROTECTION ---
+    // --- ADMIN DASHBOARD PROTECTION ---
 
-    // 1. Handle Admin Login Page Redirect
+    // 1. If hitting /admin (the login page)
     if (pathname === '/admin') {
-        const payload = token ? await verifyJWT(token) : null;
-        if (payload) {
-            return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+        if (token) {
+            const payload = await verifyJWT(token);
+            if (payload && payload.isActive !== false) {
+                // Already logged in, go to dashboard
+                return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+            }
         }
         return NextResponse.next();
     }
 
-    // 2. Protect All Dashboard Routes
+    // 2. If hitting any dashboard route (/admin/dashboard/...)
     if (pathname.startsWith('/admin/dashboard')) {
-        const payload = token ? await verifyJWT(token) : null;
-
         if (!token) {
-            console.log('Middleware: No token found. Cookies available:', request.cookies.getAll().map(c => c.name));
-            // return NextResponse.redirect(new URL('/admin', request.url)); // Temporarily allow for debugging if needed, but in prod we must redirect.
+            console.log('Middleware: No token found, redirecting to /admin');
             return NextResponse.redirect(new URL('/admin', request.url));
         }
 
+        const payload = await verifyJWT(token);
         if (!payload) {
-            console.log('Middleware: Invalid token verification, redirecting to login.');
-            return NextResponse.redirect(new URL('/admin', request.url));
-        }
-
-        // Self-protection: check if user is active
-        if (payload.isActive === false) {
+            console.log('Middleware: Token verification failed, clearing cookies and redirecting');
             const response = NextResponse.redirect(new URL('/admin', request.url));
             response.cookies.delete('admin-token');
-            response.cookies.delete('csrf-token');
-            response.cookies.delete('csrf-token-client');
             response.cookies.delete('is-authenticated');
             return response;
         }
 
-        const userRole = payload.role as string;
-
-        // Hide users page entirely if not SUPER_ADMIN
-        if (pathname.startsWith('/admin/dashboard/users')) {
-            if (userRole !== 'SUPER_ADMIN') {
-                return NextResponse.redirect(new URL('/admin/dashboard', request.url));
-            }
+        // Check if user is active
+        if (payload.isActive === false) {
+            const response = NextResponse.redirect(new URL('/admin', request.url));
+            response.cookies.delete('admin-token');
+            response.cookies.delete('is-authenticated');
+            return response;
         }
 
-        // Only SUPER_ADMIN and ADMIN see inquiries
-        if (pathname.startsWith('/admin/dashboard/inquiries')) {
-            if (userRole === 'EDITOR') {
-                return NextResponse.redirect(new URL('/admin/dashboard', request.url));
-            }
+        // Role-based access control
+        const userRole = payload.role as string;
+        if (pathname.startsWith('/admin/dashboard/users') && userRole !== 'SUPER_ADMIN') {
+            return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+        }
+        if (pathname.startsWith('/admin/dashboard/inquiries') && userRole === 'EDITOR') {
+            return NextResponse.redirect(new URL('/admin/dashboard', request.url));
         }
     }
 
