@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lock } from 'lucide-react';
 import styles from './admin.module.css';
@@ -11,10 +11,24 @@ export default function AdminLogin() {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    // Check if we are already authenticated on mount
+    useEffect(() => {
+        // Simple client-side check for a non-HTTPOnly cookie
+        if (document.cookie.includes('is-authenticated=true')) {
+            console.log('Client: Already authenticated, redirecting to dashboard...');
+            router.push('/admin/dashboard');
+        }
+    }, [router]);
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            setError('Please enter both email and password.');
+            return;
+        }
+
         setError('');
         setIsLoading(true);
+        console.log('Client: Attempting login for:', email);
 
         try {
             const res = await fetch('/api/auth/login', {
@@ -23,32 +37,28 @@ export default function AdminLogin() {
                 body: JSON.stringify({ email, password }),
             });
 
-            let data;
-            try {
-                data = await res.json();
-            } catch (jsonError) {
-                console.error('JSON Parse Error:', jsonError);
-                // If it's not JSON, it's likely a Vercel 500 error page
-                const text = await res.text().catch(() => 'No response body');
-                console.error('Raw Response:', text);
-                throw new Error(`Server Error (${res.status}): The server returned an invalid response.`);
-            }
+            const data = await res.json();
 
             if (res.ok) {
-                // Debug: Check if client cookies are set
-                console.log('Login OK. Current Cookies:', document.cookie);
-
-                // Force a hard navigation to ensure cookies are sent and middleware re-runs
+                console.log('Client: Login success. Redirecting to dashboard...');
+                // Use window.location.href for a clean state reload
                 window.location.href = '/admin/dashboard';
             } else {
+                console.error('Client: Login failed:', data.error);
                 setError(data.error || 'Invalid credentials');
             }
         } catch (err: any) {
-            console.error('Login error:', err);
-            // Show the actual error message if possible to help debugging
-            setError(err.message || 'System error. Please check your connection or try again later.');
+            console.error('Client: Network/System error during login:', err);
+            setError('System error. Please try again or check your connection.');
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    // Allow Enter key to submit
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            handleLogin();
         }
     };
 
@@ -64,36 +74,50 @@ export default function AdminLogin() {
 
                 {error && <div className={styles.errorMessage}>{error}</div>}
 
-                <form onSubmit={handleSubmit}>
+                <div onKeyDown={handleKeyDown}>
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>Email</label>
+                        <label className={styles.label}>Email Address</label>
                         <input
                             type="email"
+                            placeholder="name@company.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className={styles.input}
                             required
                             disabled={isLoading}
+                            autoComplete="email"
                         />
                     </div>
                     <div className={styles.formGroupPassword}>
                         <label className={styles.label}>Password</label>
                         <input
                             type="password"
+                            placeholder="••••••••"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className={styles.input}
                             required
                             disabled={isLoading}
+                            autoComplete="current-password"
                         />
                     </div>
                     <button
+                        type="button"
+                        onClick={handleLogin}
                         className={styles.button}
                         disabled={isLoading}
                     >
-                        {isLoading ? 'Logging in...' : 'Login'}
+                        {isLoading ? (
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                <span>Verifying...</span>
+                            </div>
+                        ) : 'Sign In'}
                     </button>
-                </form>
+
+                    <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.8rem', color: '#6b7280' }}>
+                        Secured Administrative Access
+                    </div>
+                </div>
             </div>
         </div>
     );
