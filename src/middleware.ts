@@ -2,19 +2,33 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifyJWT } from '@/lib/auth';
 
+const PUBLIC_API_ROUTES = [
+    '/api/inquiries',
+    '/api/auth/login',
+    '/api/setup'
+];
+
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const method = request.method;
     const token = request.cookies.get('admin-token')?.value;
 
-    // --- CSRF PROTECTION ---
+    // 1. CORS Preflight / OPTIONS - Always allow
+    if (method === 'OPTIONS') {
+        return NextResponse.next();
+    }
+
+    // 2. Public API Routes - Allowed without Auth/CSRF
+    // Matches exact path or subpaths (e.g. /api/inquiries/bulk)
+    if (PUBLIC_API_ROUTES.some(route => pathname === route || pathname.startsWith(`${route}/`))) {
+        return NextResponse.next();
+    }
+
+    // 3. CSRF Protection (Protected API Routes only)
     const isMutating = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);
     const isApiRoute = pathname.startsWith('/api/');
-    const isPublicApi = pathname === '/api/auth/login' ||
-        pathname === '/api/setup' ||
-        (pathname === '/api/inquiries' && method === 'POST');
 
-    if (isApiRoute && isMutating && !isPublicApi) {
+    if (isApiRoute && isMutating) {
         const csrfTokenHeader = request.headers.get('x-csrf-token');
         const csrfTokenCookie = request.cookies.get('csrf-token')?.value;
 
@@ -23,21 +37,20 @@ export async function middleware(request: NextRequest) {
         }
     }
 
-    // --- ADMIN DASHBOARD PROTECTION ---
+    // 4. Admin Dashboard Protection
 
-    // 1. If hitting /admin (the login page)
+    // Login Page Access
     if (pathname === '/admin') {
         if (token) {
             const payload = await verifyJWT(token);
             if (payload && payload.isActive !== false) {
-                // Already logged in, go to dashboard
                 return NextResponse.redirect(new URL('/admin/dashboard', request.url));
             }
         }
         return NextResponse.next();
     }
 
-    // 2. If hitting any dashboard route (/admin/dashboard/...)
+    // Protected Dashboard Routes
     if (pathname.startsWith('/admin/dashboard')) {
         if (!token) {
             return NextResponse.redirect(new URL('/admin', request.url));
@@ -51,7 +64,6 @@ export async function middleware(request: NextRequest) {
             return response;
         }
 
-        // Check if user is active
         if (payload.isActive === false) {
             const response = NextResponse.redirect(new URL('/admin', request.url));
             response.cookies.delete('admin-token');
