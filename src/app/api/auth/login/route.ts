@@ -98,35 +98,36 @@ export async function POST(request: Request) {
         });
 
         // Admin Token (HTTP-Only)
+        // DEBUG: Secure flag temporarily disabled to rule out SSL proxy issues
         response.cookies.set('admin-token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax', // Relaxed from strict to ensure reliable delivery
+            secure: false, // temporarily disabled for debugging
+            sameSite: 'lax',
             maxAge: 60 * 60 * 24, // 1 day
             path: '/',
         });
 
-        // CSRF Token Cookie (HTTP-Only for server validation)
+        // CSRF Token Cookie
         response.cookies.set('csrf-token', csrfToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: false,
             sameSite: 'lax',
             maxAge: 60 * 60 * 24,
             path: '/',
         });
 
-        // CSRF Token for Client Header (NOT httpOnly so JS can read it)
+        // CSRF Token for Client Header
         response.cookies.set('csrf-token-client', csrfToken, {
             httpOnly: false,
-            secure: process.env.NODE_ENV === 'production',
+            secure: false,
             sameSite: 'lax',
             maxAge: 60 * 60 * 24,
             path: '/',
         });
 
-        // Set a non-httpOnly flag cookie so the client knows it has a valid session
+        // Authentication Flag
         response.cookies.set('is-authenticated', 'true', {
-            secure: process.env.NODE_ENV === 'production',
+            secure: false,
             sameSite: 'lax',
             maxAge: 60 * 60 * 24,
             path: '/',

@@ -35,7 +35,9 @@ export default function AdminLogin() {
             }
 
             if (res.ok) {
-                // CSRF token is in httpOnly cookie
+                // Debug: Check if client cookies are set
+                console.log('Login OK. Current Cookies:', document.cookie);
+
                 // Force a hard navigation to ensure cookies are sent and middleware re-runs
                 window.location.href = '/admin/dashboard';
             } else {
