@@ -1,16 +1,14 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { headers } from 'next/headers';
-import { sanitizeInput, isValidEmail } from '@/lib/sanitize';
-
-// Dynamic imports for heavy/risky modules to prevent cold-start crashes affecting the whole route
-// const { sendAdminNotification, sendCustomerAutoReply } = await import('@/lib/mail');
-// const { rateLimit } = await import('@/lib/ratelimit');
 
 export async function POST(request: Request) {
     try {
-        // --- Rate Limiting ---
+        const { headers } = await import('next/headers');
+        const { prisma } = await import('@/lib/prisma');
+        const { sanitizeInput, isValidEmail } = await import('@/lib/sanitize');
         const { rateLimit } = await import('@/lib/ratelimit');
+        const { sendAdminNotification, sendCustomerAutoReply } = await import('@/lib/mail');
+
+        // --- Rate Limiting ---
         const ip = (await headers()).get('x-forwarded-for') || '127.0.0.1';
         const limitResult = await rateLimit(`inquiry:${ip}`, 10, 60);
 
@@ -71,7 +69,6 @@ export async function POST(request: Request) {
 
         // Trigger Phase 5 Email Notifications (Async)
         try {
-            const { sendAdminNotification, sendCustomerAutoReply } = await import('@/lib/mail');
             await sendAdminNotification({
                 name: body.name,
                 email: body.email,
