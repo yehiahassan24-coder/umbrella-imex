@@ -25,7 +25,8 @@ export async function verifyJWT(token: string) {
             audience: 'umbrella-admin',
         });
         return payload;
-    } catch {
+    } catch (error) {
+        console.error('JWT Verification Failed:', error);
         return null;
     }
 }

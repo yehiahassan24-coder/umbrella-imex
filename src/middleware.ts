@@ -38,7 +38,13 @@ export async function middleware(request: NextRequest) {
     if (pathname.startsWith('/admin/dashboard')) {
         const payload = token ? await verifyJWT(token) : null;
 
+        if (!token) {
+            console.log('Middleware: No token found for dashboard route, redirecting to login.');
+            return NextResponse.redirect(new URL('/admin', request.url));
+        }
+
         if (!payload) {
+            console.log('Middleware: Invalid token verification, redirecting to login.');
             return NextResponse.redirect(new URL('/admin', request.url));
         }
 

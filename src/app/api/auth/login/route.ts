@@ -101,7 +101,7 @@ export async function POST(request: Request) {
         response.cookies.set('admin-token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'lax', // Relaxed from strict to ensure reliable delivery
             maxAge: 60 * 60 * 24, // 1 day
             path: '/',
         });
@@ -110,16 +110,16 @@ export async function POST(request: Request) {
         response.cookies.set('csrf-token', csrfToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'lax',
             maxAge: 60 * 60 * 24,
             path: '/',
         });
 
         // CSRF Token for Client Header (NOT httpOnly so JS can read it)
         response.cookies.set('csrf-token-client', csrfToken, {
-            httpOnly: false, // ✅ JavaScript can read this
+            httpOnly: false,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'lax',
             maxAge: 60 * 60 * 24,
             path: '/',
         });
@@ -127,21 +127,12 @@ export async function POST(request: Request) {
         // Set a non-httpOnly flag cookie so the client knows it has a valid session
         response.cookies.set('is-authenticated', 'true', {
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'lax',
             maxAge: 60 * 60 * 24,
             path: '/',
         });
 
-        // Update last login and reset attempts
-        await prisma.user.update({
-            where: { id: user.id },
-            data: {
-                lastLogin: new Date(),
-                failedLoginAttempts: 0,
-                lockedUntil: null
-            }
-        });
-
+        console.log('Login successful, cookies set for user:', email);
         return response;
 
     } catch (error) {
