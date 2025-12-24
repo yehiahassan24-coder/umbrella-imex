@@ -90,7 +90,11 @@ export async function POST(request: Request) {
 }
 
 export async function OPTIONS() {
-    return NextResponse.json({}, { status: 200, headers: { 'Allow': 'POST, OPTIONS' } });
+    return NextResponse.json({}, { status: 200, headers: { 'Allow': 'POST, OPTIONS, GET' } });
+}
+
+export async function GET() {
+    return NextResponse.json({ status: 'API Online' }, { status: 200 });
 }
 
 export const dynamic = 'force-dynamic';
