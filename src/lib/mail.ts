@@ -1,15 +1,33 @@
 import nodemailer from 'nodemailer';
 import { prisma } from './prisma';
 
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: process.env.SMTP_PORT === '465',
-    auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-    },
-});
+// Lazy initialization to prevent crash on missing env vars
+let transporter: nodemailer.Transporter | null = null;
+
+function getTransporter() {
+    if (transporter) return transporter;
+
+    if (!process.env.SMTP_HOST || !process.env.SMTP_PORT) {
+        console.warn('⚠️ SMTP Configuration missing. Email sending disabled.');
+        return null;
+    }
+
+    try {
+        transporter = nodemailer.createTransport({
+            host: process.env.SMTP_HOST,
+            port: Number(process.env.SMTP_PORT),
+            secure: process.env.SMTP_PORT === '465',
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS,
+            },
+        });
+        return transporter;
+    } catch (error) {
+        console.error('Failed to create mail transporter:', error);
+        return null;
+    }
+}
 
 const COMPANY_NAME = "Umbrella Import & Export";
 const COMPANY_ADDRESS = "Global Logistics Hub, Sector 4, Port Area"; // Placeholder for real address
@@ -73,6 +91,9 @@ export async function sendAdminNotification(inquiry: {
         </div>
     `;
 
+    const transporter = getTransporter();
+    if (!transporter) return;
+
     return transporter.sendMail({
         from: process.env.SMTP_FROM,
         to: process.env.ADMIN_EMAIL,
@@ -115,6 +136,9 @@ export async function sendCustomerAutoReply(customerEmail: string, customerName:
         </div>
     `;
 
+    const transporter = getTransporter();
+    if (!transporter) return;
+
     return transporter.sendMail({
         from: process.env.SMTP_FROM,
         to: customerEmail,
@@ -152,6 +176,9 @@ export async function sendAssignmentNotification(staffEmail: string, inquiry: {
             </div>
         </div>
     `;
+
+    const transporter = getTransporter();
+    if (!transporter) return;
 
     return transporter.sendMail({
         from: process.env.SMTP_FROM,
@@ -210,6 +237,9 @@ export async function sendStatusUpdateNotification(
             </div>
         </div>
     `;
+
+    const transporter = getTransporter();
+    if (!transporter) return;
 
     return transporter.sendMail({
         from: process.env.SMTP_FROM,
@@ -271,6 +301,9 @@ export async function sendSLADigest(adminEmail: string) {
             </div>
         </div>
     `;
+
+    const transporter = getTransporter();
+    if (!transporter) return;
 
     await transporter.sendMail({
         from: process.env.SMTP_FROM,
