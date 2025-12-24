@@ -39,7 +39,8 @@ export async function middleware(request: NextRequest) {
         const payload = token ? await verifyJWT(token) : null;
 
         if (!token) {
-            console.log('Middleware: No token found for dashboard route, redirecting to login.');
+            console.log('Middleware: No token found. Cookies available:', request.cookies.getAll().map(c => c.name));
+            // return NextResponse.redirect(new URL('/admin', request.url)); // Temporarily allow for debugging if needed, but in prod we must redirect.
             return NextResponse.redirect(new URL('/admin', request.url));
         }
 
