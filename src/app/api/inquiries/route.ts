@@ -88,3 +88,9 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
+
+export async function OPTIONS() {
+    return NextResponse.json({}, { status: 200, headers: { 'Allow': 'POST, OPTIONS' } });
+}
+
+export const dynamic = 'force-dynamic';

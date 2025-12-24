@@ -13,9 +13,9 @@ export async function middleware(request: NextRequest) {
     const method = request.method;
     const token = request.cookies.get('admin-token')?.value;
 
-    // 1. CORS Preflight / OPTIONS - Always allow
+    // 1. CORS Preflight / OPTIONS - Always allow and terminate
     if (method === 'OPTIONS') {
-        return NextResponse.next();
+        return new NextResponse(null, { status: 200 });
     }
 
     // 2. Public API Routes - Allowed without Auth/CSRF
